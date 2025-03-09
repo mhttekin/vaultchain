@@ -65,7 +65,7 @@ This ensures everyone stays updated, prevents conflicts, and maintains clarity i
 The dependencies for the backend are not talked through and is in ambiguity.
 
 **Make sure to have up-to-date NPM and Node.js**
-For the frontend, we will use React.
+For the frontend, we will use React Next.js.
 To download all the modules for it:
 ```shell
 cd frontend
