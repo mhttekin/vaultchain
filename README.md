@@ -17,7 +17,7 @@ This remote branch will be used to get any updates from the system, the commands
 
 ```shell
 git fetch upstream
-git checkout main (or **master** depending on your local main)
+git checkout main (or master depending on your local main)
 git merge upstream/main 
 ```
 
