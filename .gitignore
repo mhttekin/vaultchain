@@ -1,0 +1,14 @@
+# Python virtual environment
+myenv/
+
+# Django database files
+*.sqlite3
+db.sqlite3
+
+# Django migrations & cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment variables (API keys, secrets)
+.env

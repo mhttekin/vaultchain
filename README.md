@@ -60,10 +60,35 @@ git merge upstream/main
 
 This ensures everyone stays updated, prevents conflicts, and maintains clarity in collaborative workflows.
 
-### Dependencies
+## Dependencies
 
-The dependencies for the backend are not talked through and is in ambiguity.
+**Recommended Versions:**
+- Python >= 3.10
+- Node.js >= 18.x
 
+### Django Backend
+
+
+To setup backend, we need to create python environment first:
+```shell
+python3 -m venv myenv # or just python instead of python3 depending on your machine
+source myenv/bin/activate # (or activate.fish if on fish shell) macOS/Linux
+myenv/Scripts/activate # (same if fish) Windows
+```
+Now, that the environment is activated on your shell, install the requirements:
+```shell
+pip install -r requirements.txt
+```
+After installation completed, head to the back folder and create the DB locally:
+```shell
+cd back
+python3 manage.py migrate
+```
+Now, everything is set, run the server with:
+```shell
+python3 manage.py runserver
+```
+### Next.js + React Frontend
 **Make sure to have up-to-date NPM and Node.js**
 For the frontend, we will use React Next.js.
 To download all the modules for it:
@@ -77,4 +102,10 @@ You should be able to run the server locally through:
 npm run start
 ```
 
+### Updates 
 
+* Always make sure your dependencies are up-to-date:
+```shell
+pip install --upgrade -r requirements.txt # Backend in the root file
+npm update # Frontend, node updates can goof up the project sometimes, if project broken just revert to last git push or delete the folder and reclone 
+```
