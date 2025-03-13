@@ -68,6 +68,11 @@ This ensures everyone stays updated, prevents conflicts, and maintains clarity i
 
 ### Django Backend
 
+**CREATE A .ENV FILE IN THE BACK FOLDER (NOT BACK/BACKEND)**
+```shell
+touch .env
+```
+**AND PASTE THE LINE I SENT ON WHATSAPP OR ELSE WONT WORK**
 
 To setup backend, we need to create python environment first:
 ```shell
