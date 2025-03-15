@@ -12,3 +12,8 @@ __pycache__/
 
 # Environment variables (API keys, secrets)
 .env
+
+# weird file 
+.DS_Store
+**/.DS_Store
+

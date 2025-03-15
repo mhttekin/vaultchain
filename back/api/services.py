@@ -16,7 +16,7 @@ def create_user_wallets(user):
     chains = Chain.objects.filter(symbol__in=["BTC", "ETH", "SOL"])
     wallets = []
 
-    with transaction.atomic(): # i dont know what this line is
+    with transaction.atomic(): # i dont know what this line is // i learned it >> either create all of them or add none of them. 
         for chain in chains:
             # Now normally we would have had some real cryptographic stuff, but this is all mimicing
             public_key = f"{chain.symbol.lower()}_{secrets.token_hex(16)}"
