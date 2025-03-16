@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Chain, Coin, Wallet, WalletBalance
+from .models import Chain, Coin, Wallet, WalletBalance, Transaction
 
 """
 This file converts the Python objects into JSON or XML, so we can send them through HTTP to frontend.
@@ -118,4 +118,33 @@ class WalletBalanceUpdateSerializer(serializers.ModelSerializer):
         instance.amount = validated_data.get('amount', instance.amount)
         instance.save()
         return instance
+
+class TransactionViewSerializer(serializers.ModelSerializer):
+    """
+    We don't want to give too much information with this one or it will be vulnerable.
+    """
+
+    counterparty_public_key = serializers.CharField(source='counterparty_wallet.public_key', read_only=True)
+    wallet_public_key = serializers.CharField(source='wallet.public_key', read_only=True)
+    coin_symbol = serializers.CharField(source='coin.symbol', read_only=True)
+
+    class Meta:
+        model = Transaction
+        fields = ['id', 'wallet_public_key', 'counterparty_public_key', 'coin_symbol', 'amount',
+                  'timestamp', 'transaction_type','sender_previous_balance',
+                  'sender_new_balance', 'recipient_previous_balance', 'recipient_new_balance']
+        read_only_fields = fields    
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        user = self.context['request'].user 
+        # we exclude the other parties balances since it would be weird
+        if instance.wallet.user == user:
+            representation.pop('recipient_previous_balance', None)
+            representation.pop('recipient_new_balance', None)
+        elif instance.counterparty_wallet and instance.counterparty_wallet.user == user:
+            representation.pop('sender_previous_balance', None)
+            representation.pop('sender_new_balance', None)
+
+        return representation 
 

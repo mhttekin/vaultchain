@@ -106,4 +106,26 @@ class WalletBalance(models.Model):
     def __str__(self):
         return f"{self.wallet.user.email} - {self.amount} {self.coin.symbol}"
 
+class Transaction(models.Model):
+    """
+    Transaction can be deposit, withdrawal, or transfer, the transferhistory should be both ways for 
+    the recipient as well.
+    """
+    TRANSACTION_TYPES = (
+            ('deposit', 'Deposit'),
+            ('withdrawal', 'Withdrawal'),
+            ('transfer', 'Transfer')
+    )
+    wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name="transactions")
+    counterparty_wallet = models.ForeignKey(Wallet, on_delete=models.SET_NULL, null=True, blank=True)
+    coin = models.ForeignKey(Coin, on_delete=models.CASCADE) 
+    transaction_type = models.CharField(max_length=20, choices=TRANSACTION_TYPES)
+    amount = models.DecimalField(max_digits=20, decimal_places=8)
 
+    sender_previous_balance = models.DecimalField(max_digits=20, decimal_places=8)
+    sender_new_balance = models.DecimalField(max_digits=20, decimal_places=8)
+    # recipient changes if there is // i didn't want to make a duplicate transaction object for the other party 
+    recipient_previous_balance = models.DecimalField(max_digits=20, decimal_places=8, null=True, blank=True)
+    recipient_new_balance = models.DecimalField(max_digits=20, decimal_places=8, null=True, blank=True)
+
+    timestamp = models.DateTimeField(auto_now_add=True)

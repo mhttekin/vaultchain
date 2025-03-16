@@ -5,9 +5,9 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import generics
 from rest_framework.status import status
 from rest_framework.response import Response
-from .serializers import UserCreateSerializer, WalletSerializer, WalletBalanceSerializer, WalletBalanceUpdateSerializer, UserUpdateSerializer, PasswordUpdateSerializer, UserSerializer, CoinSerializer, ChainSerializer
+from .serializers import UserCreateSerializer, WalletSerializer, WalletBalanceSerializer, WalletBalanceUpdateSerializer, UserUpdateSerializer, PasswordUpdateSerializer, UserSerializer, CoinSerializer, ChainSerializer, TransactionViewSerializer
 from .services import create_user_wallets
-from .models import Wallet, WalletBalance, Coin, Chain
+from .models import Wallet, WalletBalance, Coin, Chain, Transaction
 """
 This is the place where we take Web Requests like GET, POST and turn them into Web responses.
 Ex: Front-end asks for user wallets, this is the place where we create the right functions to
@@ -142,3 +142,12 @@ also add a services method so we can create a record when deposit or withdraw.
 Also, probably transaction model, serializer, put view, a method in services which will update
 the balance of recipient wallet address yadaydaydadyadayyad of amk
 """
+class TransactionHistoryView(generics.ListAPIView):
+    serializer_class = TransactionViewSerializer
+    permission_classes = [IsAuthenticated]
+    http_method_names = ['get']
+
+    def get_queryset(self):
+        return Transaction.objects.filter(Q(wallet__user = self.request.user) 
+                                          | Q(counterparty_wallet__user = self.request.user)).order_by('-timestamp') # we ordering 
+
