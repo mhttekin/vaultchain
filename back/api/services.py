@@ -1,6 +1,6 @@
 import secrets
 from django.db import transaction
-from .models import Chain, Wallet, WalletBalance, Coin
+from .models import Chain, Wallet, WalletBalance, Coin, Transaction 
 
 """
 Some logic for api calls and creating stuff
@@ -33,3 +33,25 @@ def create_user_wallets(user):
             wallets.append(wallet)
     
     return wallets
+
+def create_self_transaction_log(sender, coin, amount, t_type):
+    sender_balance = WalletBalance.objects.get(wallet=sender, coin=coin)
+    sender_current = sender_balance.amount
+    sender_previous = sender_current + amount
+
+    if t_type == 'deposit':
+        sender_previous = sender_current - amount
+
+    transaction = Transaction.objects.create(
+        wallet=sender,
+        counterparty_wallet=None,
+        coin=coin,
+        amount=amount,
+        sender_previous_balance=sender_previous,
+        sender_new_balance=sender_current,
+        recipient_previous_balance=None,
+        recipient_new_balance=None,
+        transaction_type=t_type
+    )
+
+    return transaction

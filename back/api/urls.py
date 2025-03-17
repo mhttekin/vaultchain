@@ -2,7 +2,8 @@ from django.urls import path
 from .views import (
     RegisterView, WalletListView, WalletBalanceView, WalletBalanceUpdateView,
     UserFieldsUpdateView, PasswordUpdateView, UserFieldsInfoView,
-    CoinListView, ChainListView, TransactionHistoryView
+    CoinListView, ChainListView, TransactionHistoryView,
+    TransactionCreateView, WalletLookupView
 )
 
 urlpatterns = [
@@ -24,4 +25,6 @@ urlpatterns = [
     
     # Transaction history
     path('transactions/', TransactionHistoryView.as_view(), name='transaction-history'),
+    path('transactions/create', TransactionCreateView.as_view(), name='transaction-create'),
+    path('wallet-lookup', WalletLookupView.as_view(), name='wallet-lookup'),
 ]

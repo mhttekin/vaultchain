@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from django.db import transaction
 from .models import Chain, Coin, Wallet, WalletBalance, Transaction
 
 """
@@ -147,4 +148,87 @@ class TransactionViewSerializer(serializers.ModelSerializer):
             representation.pop('sender_new_balance', None)
 
         return representation 
+
+class TransactionCreateSerializer(serializers.Serializer):
+    sender_public_key = serializers.CharField(write_only=True)
+    recipient_public_key = serializers.CharField(write_only=True)
+    coin_id = serializers.IntegerField(write_only=True)
+    amount = serializers.DecimalField(max_digits=20, decimal_places=8, min_value=0.00000001)
+
+    def validate(self, data):
+        # check if sender wallet exists 
+        try:
+            sender_wallet = Wallet.objects.get(
+                public_key=data['sender_public_key'],
+                user=self.context['request'].user
+            )
+        except Wallet.DoesNotExist:
+            raise serializers.ValidationError('Wallet not found')
+        # check if the recipient wallet exists 
+        try:
+            recipient_wallet = Wallet.objects.get(public_key=data['recipient_public_key'])
+        except Wallet.DoesNotExist:
+            raise serializers.ValidationError('Recipient wallet does not exist')
+        # check if the wallet chain's are the same 
+        if sender_wallet.chain != recipient_wallet.chain:
+            raise serializers.ValidationError("Wallet chain's do not match")
+        # check if coin exists
+        try:
+            coin = Coin.objects.get(id=data['coin_id'])
+        except Coin.DoesNotExist:
+            raise serializers.ValidationError('Coin does not exist')
+        # check if sender has balance 
+        try:
+            sender_balance = WalletBalance.objects.get(
+                    wallet=sender_wallet,
+                    coin=coin
+            )
+        except WalletBalance.DoesNotExist:
+            raise serializers.ValidationError('Wallet balance does not exist')
+        if data['amount'] > sender_balance.amount:
+            raise serializers.ValidationError('Insufficient balance')
+        # we assign the values
+        data['sender_wallet'] = sender_wallet
+        data['recipient_wallet'] = recipient_wallet
+        data['coin'] = coin
+        data['sender_balance'] = sender_balance
+        
+        return data
+
+    def create(self, validated_data):
+        sender_wallet = validated_data['sender_wallet']
+        recipient_wallet = validated_data['recipient_wallet']
+        coin = validated_data['coin']
+        sender_balance = validated_data['sender_balance']
+        amount = validated_data['amount']
+
+        # now we either get or create the walletbalance 
+        recipient_balance, created = WalletBalance.objects.get_or_create(
+            wallet=recipient_wallet,
+            coin=coin,
+            defaults={'amount': 0}
+        )
+
+        sender_previous = sender_balance.amount
+        recipient_previous = recipient_balance.amount
+
+        with transaction.atomic():
+            # we save this boys
+            sender_balance.amount -= amount
+            sender_balance.save()
+            recipient_balance.amount += amount
+            recipient_balance.save()
+            # job done
+            tobj = Transaction.objects.create(
+                    wallet=sender_wallet,
+                    counterparty_wallet=recipient_wallet,
+                    coin=coin,
+                    amount=amount,
+                    sender_previous_balance=sender_previous,
+                    sender_new_balance=sender_balance.amount,
+                    recipient_previous_balance=recipient_previous,
+                    recipient_new_balance=recipient_balance.amount,
+                    transaction_type='transfer'
+                    )
+        return tobj
 

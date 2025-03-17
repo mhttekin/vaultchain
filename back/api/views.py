@@ -1,18 +1,23 @@
 from django.shortcuts import render
+import re
 from django.db.models import Q
+from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
-from .serializers import UserCreateSerializer, WalletSerializer, WalletBalanceSerializer, WalletBalanceUpdateSerializer, UserUpdateSerializer, PasswordUpdateSerializer, UserSerializer, CoinSerializer, ChainSerializer, TransactionViewSerializer
-from .services import create_user_wallets
+from rest_framework.exceptions import NotFound, ValidationError
+from .serializers import UserCreateSerializer, WalletSerializer, WalletBalanceSerializer, WalletBalanceUpdateSerializer, UserUpdateSerializer, PasswordUpdateSerializer, UserSerializer, CoinSerializer, ChainSerializer, TransactionViewSerializer, TransactionCreateSerializer
+from .services import create_user_wallets, create_self_transaction_log
 from .models import Wallet, WalletBalance, Coin, Chain, Transaction
 """
 This is the place where we take Web Requests like GET, POST and turn them into Web responses.
 Ex: Front-end asks for user wallets, this is the place where we create the right functions to
 let that happen. JWT Auth is required for most of the stuff.
 """
+
+User = get_user_model()
 
 # generics class hopefully does all the magic
 # This only supports POST by default
@@ -68,10 +73,25 @@ class WalletBalanceUpdateView(generics.UpdateAPIView):
         )
     def perform_update(self, serializer):
         """
-        we will call a method which logs the transaction after this. later. 
+        we will call a method which logs the deposit/withdrawal after this. later. 
         """
         old_amount = serializer.instance.amount 
-        serializer.save()
+        wallet_balance = serializer.save()
+        wallet = wallet_balance.wallet 
+        coin = wallet_balance.coin
+        amount_changed = abs(wallet_balance.amount - old_amount)
+        if wallet_balance.amount > old_amount:
+            t_type = 'deposit'
+        else:
+            t_type = 'withdrawal'
+        create_self_transaction_log(
+                sender=wallet,
+                coin=coin,
+                amount=amount_changed,
+                t_type=t_type
+        )
+        
+
     
 # either name or surname update; nothing else
 class UserFieldsUpdateView(generics.UpdateAPIView):
@@ -150,4 +170,72 @@ class TransactionHistoryView(generics.ListAPIView):
     def get_queryset(self):
         return Transaction.objects.filter(Q(wallet__user = self.request.user) 
                                           | Q(counterparty_wallet__user = self.request.user)).order_by('-timestamp') # we ordering 
+
+class TransactionCreateView(generics.CreateAPIView):
+    # this creates the transaction 
+    serializer_class = TransactionCreateSerializer
+    permission_classes = [IsAuthenticated]
+    http_method_names = ['post']
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+
+"""
+This function is for transfer recipient address check. If the sender doesn't know the recipient's public key,
+this view method let's the user check by the email address and grab it.
+"""
+
+class WalletLookupView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    http_method_names = ['get']
+
+    def get(self, request):
+        search_term = self.request.query_params.get('search')
+        chain_id = self.request.query_params.get('chain_id')
+
+        if not search_term or not chain_id:
+            return Response({"error":"Both search term and chain id is required."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # checking if it's an email
+        is_email = '@' in search_term
+        if is_email:
+            try:
+                user = User.objects.get(email=search_term)
+                wallet = Wallet.objects.get(user=user, chain__id=chain_id)
+                return Response({
+                    'wallet_found': True,
+                    'search_type': 'email',
+                    'wallet': {
+                        'public_key': wallet.public_key,
+                        'chain': {
+                            'id': chain_id,
+                            'name': wallet.chain.name,
+                            'symbol': wallet.chain.symbol
+                            },
+                        'user_email': wallet.user.email
+                        }
+                    })
+            except (User.DoesNotExist, Wallet.DoesNotExist):
+                return Response({"error":"No wallet on this email address."}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            if not is_email and not re.match(r'^[a-z0-9_]{17,63}$', search_term): # the regex for public key lmao
+                return Response({"error":"Invalid wallet address format"}, status=status.HTTP_400_BAD_REQUEST)
+            try:
+                wallet = Wallet.objects.get(public_key=search_term, chain__id=chain_id)
+                return Response({
+                    'wallet_found': True,
+                    'search_type': 'public_key',
+                    'wallet': {
+                        'public_key': search_term,
+                        'chain': {
+                            'id': chain_id,
+                            'name': wallet.chain.name,
+                            'symbol': wallet.chain.symbol
+                            }
+                        }
+                })
+            except Wallet.DoesNotExist:
+                return Response({"error":"No wallet with this public key"}, status=status.HTTP_404_NOT_FOUND)
+        
 
