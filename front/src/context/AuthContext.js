@@ -1,15 +1,42 @@
 "use client"
-import React, { useContext, createContext, useState } from "react";
+import React, { useEffect, useContext, createContext, useState } from "react";
 import axiosInstance from "../lib/axios";
 
 // i had this in one of my old projects, don't know the full functionality behind it, changed it for ours.
 export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  // i ll set the user later
-  // const [user, setUser] = useState(null);
-  const [authToken, setAuthToken] = useState(localStorage.getItem('access_token'));
-  const [loading, setLoading] = useState(false);
+
+  const [authToken, setAuthToken] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(); 
+
+  const fetchUserProfile = async () => {
+    try {
+      const response = await axiosInstance.get('/api/user/profile/');
+      setUser(response.data);
+      return response.data
+    } catch (error) {
+      setAuthToken(null);
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      setUser(null);
+      return null;
+    }
+  };
+
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const token = localStorage.getItem('access_token');
+      if (token) {
+        setAuthToken(token);
+        await fetchUserProfile();
+      }
+      setLoading(false);
+    };
+    checkSession();
+  }, []);
 
   const login = async (email, password) => {
     setLoading(true);
@@ -22,8 +49,11 @@ export const AuthProvider = ({ children }) => {
       setAuthToken(access);
       localStorage.setItem('access_token', access);
       localStorage.setItem('refresh_token', refresh);
-      return response.data
-
+      const userProfile = await fetchUserProfile();
+      return { 
+        success: true,
+        data: userProfile
+      };
     } catch (error) {
       return {
         success: false,
@@ -48,7 +78,11 @@ export const AuthProvider = ({ children }) => {
       setAuthToken(access);
       localStorage.setItem('access_token', access);
       localStorage.setItem('refresh_token', refresh);
-      return response.data;
+      const userProfile = await fetchUserProfile();
+      return {
+        success: true,
+        data: userProfile
+      };
     } catch (error) {
       return {
         success: false,
@@ -62,6 +96,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(true); 
     try{
       setAuthToken(null);
+      setUser(null);
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
       return {success: true}
@@ -77,6 +112,8 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{
+      user,
+      setUser,
       authToken,
       setAuthToken,
       login,
