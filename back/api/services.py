@@ -28,8 +28,16 @@ def create_user_wallets(user):
                 public_key=public_key,
                 private_key=private_key # now this is fucked up 
             )
+            try:
+                native_coin = Coin.objects.get(symbol=chain.symbol)
+                WalletBalance.objects.create(
+                    wallet=wallet,
+                    coin=native_coin,
+                    amount=0
+                )
+            except Coin.DoesNotExist:
+                pass
 
-            # not sure if we should create walletbalance for each coin on the chain i don't think it's clever. 
             wallets.append(wallet)
     
     return wallets

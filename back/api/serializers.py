@@ -87,10 +87,9 @@ class CoinSerializer(serializers.ModelSerializer):
 class WalletSerializer(serializers.ModelSerializer):
 
     chain = ChainSerializer(read_only=True)
-    user = UserSerializer(read_only=True)
     class Meta:
         model = Wallet
-        fields = ['id', 'user', 'chain', 'public_key', 'created_at'] # we not adding private key 
+        fields = ['id', 'chain', 'public_key', 'created_at'] # we not adding private key 
         read_only_fields = ['id', 'public_key', 'created_at']
 
 # Gets the walletbalance, no updating
