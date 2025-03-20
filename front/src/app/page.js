@@ -17,7 +17,7 @@ export default function Home() {
   const [displayNetworks, setDisplayNetworks] = useState('All Networks');
   
   const [walletBalances, setWalletBalances] = useState(null);
-  const [totalBalance, setTotalBalance] = useState(0);
+  const [totalBalance, setTotalBalance] = useState(0.00);
 
   const dropdownRef = useRef(null);
 
@@ -62,6 +62,18 @@ export default function Home() {
       fetchBalances();
     }
   }, [user, wallets]);
+
+  useEffect(() => {
+    if (user && walletBalances && walletBalances.length > 0) {
+      setMainLoading(true);
+      let amount = 0.00;
+      walletBalances.forEach(balance => {
+        amount += Number(balance.amount);
+      });
+      setTotalBalance(amount);
+      setMainLoading(false);
+    }
+  }, [user, walletBalances]);
   
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -100,6 +112,20 @@ export default function Home() {
     }); 
   }
 
+  const getFilteredBalances = () => {
+    if (!walletBalances) return [];
+    if (selectedNetworks.length === 0) {
+      return walletBalances;
+    }
+    return walletBalances.filter(balance =>
+      selectedNetworks.includes(balance.coin.chain.symbol)
+    );
+  };
+
+  const formatBalance = (balance) => {
+    return Number(balance).toFixed(2);
+  };
+
   if (loading) {
     // we can add a spinner component later
     return <div>Loading...</div>
@@ -118,28 +144,37 @@ export default function Home() {
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         <div>
           <h1>Welcome {user.first_name} {user.last_name}</h1>
+          <h2>Current Balance: {formatBalance(totalBalance)}</h2>
           <div className='relative' ref={dropdownRef}>
             <button onClick={() => setOpenNetwork(!openNetwork)}>{displayNetworks} {openNetwork ? "▲" : "▼"}</button>
             {openNetwork && (
               <div className='bg-gray-900 flex flex-col absolute z-10'>
+                <button onClick={() => handleNetworkFilter(null)} className='text-start'>All Networks</button>
                 {wallets.map(wallet => (
                   <button 
                     key={wallet.id}
-                    onClick={() => handleNetworkFilter(wallet.chain.symbol)}>
+                    onClick={() => handleNetworkFilter(wallet.chain.symbol)}
+                    className='text-start'>
                       <span>{wallet.chain.name}</span>
                   </button>
                 ))}
               </div>
               )}
           </div>
-          <div>
+          <div className='mt-20'>
             {walletBalances && (
-              <div>
-                {walletBalances.map(balance => (
-                  <button>
-                    {balance.coin.name} : {balance.coin.symbol.padEnd(6, ' ')}{balance.amount}
-                  </button>
-                ))}
+              <div className='flex flex-col'>
+                {getFilteredBalances().length > 0 ? (
+                  getFilteredBalances().map(balance => (
+                    <button
+                      key={balance.id}
+                      className='text-start'>
+                      {balance.coin.name} : {balance.amount} {balance.coin.symbol}
+                    </button>
+                  ))
+                ) : (
+                  <div className="text-gray-400">No balances to display for selected networks</div>
+                )}
               </div>
             )}
           </div>
