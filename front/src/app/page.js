@@ -116,6 +116,7 @@ export default function Home() {
       {/* Navigation Bar */}
       <nav className="navbar grid-item nav">
         <Link href="/">Home</Link>
+        <Link href="/wallet">Wallet</Link>
         {user ? (
           <button onClick={handleLogout} className="logout-button">
             Logout
