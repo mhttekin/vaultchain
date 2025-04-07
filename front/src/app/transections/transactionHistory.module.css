@@ -1,0 +1,138 @@
+.pageWrapper {
+min-height: 100vh;
+background: linear-gradient(145deg, #0a0f1a, #0e1628);
+padding: 2rem;
+display: flex;
+flex-direction: column;
+justify-content: flex-start;
+align-items: center;
+color: #c9d1d9;
+font-family: "Inter", sans-serif;
+}
+
+.historyPanel {
+background: #161b22;
+border: 0.063rem solid #30363d;
+border-radius: 0.6rem;
+padding: 1.5rem;
+width: 100%;
+max-width: 63rem;
+box-shadow: 0 0 1.2rem rgba(88, 166, 255, 0.15);
+}
+
+.title {
+font-size: 1.5rem;
+font-weight: 600;
+color: #58a6ff;
+margin-bottom: 1.5rem;
+text-align: center;
+border-bottom: 0.06rem solid #30363d;
+padding-bottom: 1rem;
+}
+
+.navbar {
+position: sticky;
+top: 0;
+left: 0;
+width: 100%;
+height: 2rem;
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 0.5rem;
+padding: 0.05rem 0.03rem;
+background-color: #0d1117;
+border-bottom: 0.06rem solid #30363d;
+z-index: 100;
+}
+
+.navButton {
+background-color: #161b22;
+color: #c9d1d9;
+border: 0.06rem solid #30363d;
+margin-bottom: 2rem;
+border-radius: 0.5rem;
+padding: 0.3rem 1rem;
+font-size: 1rem;
+cursor: pointer;
+transition: all 0.2s ease;
+}
+
+.navButton:hover {
+background-color: #21262d;
+color: #58a6ff;
+border-color: #093a71;
+}
+
+.loading {
+position: fixed;
+top: 0;
+left: 0;
+width: 100vw;
+height: 100vh;
+background: linear-gradient(145deg, #0a0f1a, #0e1628);
+color: #58a6ff;
+display: flex;
+justify-content: center;
+align-items: center;
+font-size: 1.2rem;
+z-index: 999;
+}
+
+.error {
+text-align: center;
+color: #f85149;
+font-size: 1rem;
+margin-top: 2rem;
+font-weight: 500;
+background-color: #1f1f1f;
+border: 0.1rem solid #f85149;
+padding: 1rem;
+border-radius: 0.5rem;
+}
+
+.transactionList {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+gap: 0.7rem;
+margin-bottom: 1rem;
+font-size: 1rem;
+}
+
+.transactionCard {
+background-color: #0d1117;
+border: 1rem solid #21262d;
+border-left: 0.3rem solid #2ea043;
+padding: 1rem;
+border-radius: 0.4rem;
+transition: transform 0.2s ease;
+}
+
+.transactionCard:hover {
+transform: translateY(-0.25rem);
+box-shadow: 0 0 0.6rem rgba(88, 166, 255, 0.2);
+}
+
+.transactionLabel {
+color: #8b949e;
+font-weight: 600;
+margin-right: 0.25rem;
+}
+
+.transactionType.deposit {
+color: #2ea043;
+}
+
+.transactionType.withdraw {
+color: #f85149;
+}
+
+.transactionType.transfer {
+color: #db6d28;
+}
+
+.noTransactions {
+color: #768390;
+text-align: center;
+margin-top: 2rem;
+}
