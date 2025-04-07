@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import axiosInstance from "../../lib/axios";
 import "./admin.css";
 
 export default function AdminLogin() {
@@ -11,12 +12,6 @@ export default function AdminLogin() {
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  // Hardcoded admin credentials
-  const adminCredentials = {
-    email: "admin@example.com",
-    password: "admin123",
-  };
 
   const handleLoginChange = (e) => {
     setLoginForm({
@@ -30,17 +25,25 @@ export default function AdminLogin() {
     setIsLoading(true);
     setError("");
 
-    // Check if the entered credentials match the hardcoded admin credentials
-    if (
-      loginForm.email === adminCredentials.email &&
-      loginForm.password === adminCredentials.password
-    ) {
-      router.push("/admin/dashboard"); // Redirect to admin dashboard
-    } else {
-      setError("Invalid admin credentials");
-    }
+    try {
+      const response = await axiosInstance.post("/login", {
+        email: loginForm.email,
+        password: loginForm.password,
+      });
 
-    setIsLoading(false);
+      //Check if the user is an admin through isSuper property
+      if (response.data.isSuper) {
+        router.push("/admin/dashboard");
+      } else {
+        setError("You are not authorized.");
+      }
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "Login failed. Please try again."
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
