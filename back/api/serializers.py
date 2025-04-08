@@ -20,9 +20,6 @@ class UserSerializer(serializers.ModelSerializer):
 
 # for getting the user data from the register form 
 class UserCreateSerializer(serializers.ModelSerializer):
-    """
-    In future or maybe never, we should add a password strength checker. 
-    """
     password = serializers.CharField(write_only=True) # only to be written not accessed. 
     class Meta:
         model = User
@@ -123,7 +120,6 @@ class TransactionViewSerializer(serializers.ModelSerializer):
     """
     We don't want to give too much information with this one or it will be vulnerable.
     """
-
     counterparty_public_key = serializers.CharField(source='counterparty_wallet.public_key', read_only=True)
     wallet_public_key = serializers.CharField(source='wallet.public_key', read_only=True)
     coin_symbol = serializers.CharField(source='coin.symbol', read_only=True)

@@ -204,17 +204,3 @@ margin-top: 2rem;
     color: #00ffcc; /* Highlight color on hover */
   }
   
-  /* Other local styles */
-  .pageWrapper {
-    min-height: 100vh;
-    background: linear-gradient(145deg, #0a0f1a, #0e1628);
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    color: #c9d1d9;
-    font-family: "Inter", sans-serif;
-  }
-  
-  /* Add other local styles here */

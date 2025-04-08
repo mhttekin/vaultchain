@@ -12,9 +12,6 @@ class CustomUserManager(BaseUserManager):
     """
 
     def create_user(self, email, password, user_type='standard', **extra_fields):
-        """
-        for mere peasants
-        """
         if not email:
             raise ValueError('The Email must be set')
         email = self.normalize_email(email)
@@ -23,9 +20,6 @@ class CustomUserManager(BaseUserManager):
         user.save()
         return user
     def create_superuser(self, email, password, **extra_fields):
-        """
-        this is where titans are created 
-        """ 
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True) # Already is but security measure
