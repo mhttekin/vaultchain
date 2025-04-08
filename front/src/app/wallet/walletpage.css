@@ -14,28 +14,6 @@
 }
 
 
-/* Welcome Section */
-.text-lg {
-  font-size: 1.25rem;
-  color: #cccccc; /* Subtle gray for smaller text */
-}
-
-.text-2xl {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #ffffff; /* Bright white for emphasis */
-}
-
-/* Wallet Section */
-.text-3xl {
-  font-size: 3rem;
-  font-weight: bold;
-  color: #00ffcc; /* Highlight color for balance */
-}
-
-.border-b {
-  border-bottom: 1px solid #333333; /* Subtle border */
-}
 
 .coin-name {
   font-size: 1rem;
@@ -78,18 +56,9 @@
   border-radius: 12px 12px 0 0;
 }
 
-.shadow {
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-}
-
-.border-t-2 {
-  border-top: 2px solid #333333;
-}
-
 .walletpage-container {
   background-color: #121212;
   color: #ffffff;
-  font-family: Arial, sans-serif;
   min-height: 100vh;
   padding: 20px;
 }

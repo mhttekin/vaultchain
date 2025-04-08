@@ -11,6 +11,7 @@ import Copy from "../components/icons/copy.svg";
 import Send from "../components/icons/send.svg";
 import Buy from "../components/icons/cart.svg";
 import Settings from "../components/icons/settings.svg";
+import { Josefin_Sans } from "next/font/google";
 
 
 
@@ -166,15 +167,15 @@ export default function Home() {
         </div>
       )}
       <div className="flex flex-row justify-between items-start mt-14 mx-[1.75rem]">
-        <div className="w-auto flex flex-col justify-start text-gray-200">
+        <div className="w-auto flex flex-col justify-start text-gray-200 font-bold">
           <span
-          className="text-lg">Welcome</span>
-          <span className="text-xl">{user.first_name} {user.last_name}</span>
+          className="text-blue-500 font-semibold text-xl">Welcome</span>
+          <span className="text-3xl text-white">{user.first_name} {user.last_name}</span>
         </div>
         <div className="relative">
         <button
         ref={settingsRef}
-        className="cursor-pointer rounded-lg hover:shadow-white shadow p-1"
+        className="cursor-pointer rounded-lg pt-2 pr-4"
 
         onClick={() => setSettingsOpen(prev => !prev)}>
           <Settings className="w-6 h-6"/> 
@@ -182,8 +183,8 @@ export default function Home() {
         {settingsOpen && (
           <div
           ref={settingsBarRef}
-          className="absolute top-10 left-0 flex flex-col gap-2 bg-[#252525] 
-          border w-[5.1rem] h-20 p-1 py-2 rounded-lg border-white justify-center">
+          className="absolute top-8 -left-4 flex flex-col gap-2 bg-[#252525] 
+          w-[4.5rem] h-20 p-1 py-2 justify-center rounded-lg">
             <Link href="/profile" className="border-b border-b-gray-700/50 pb-2">
             Profile</Link>
             <button onClick={handleLogout} className="text-left">Log out</button> 
@@ -194,7 +195,7 @@ export default function Home() {
 
       {/* Wallet Items */}
       <div className="relative w-full flex flex-col items-center
-      mt-[3rem] border-b border-gray-700 pb-10 px-[1.75rem]">
+      mt-[4rem] border-b border-gray-700 pb-10 px-[1.75rem]">
         <div className="flex flex-col justify-center items-center relative max-w-40">
           <div className={`min-w-40 max-w-80 h-10 text-4xl text-center duration-300 transition-all
             ${hideBalance ? 'bg-[rgba(180,235,255,1)] blur-3xl rounded-lg' : ''}`}>{hideBalance ? '' : `$${formatBalance(totalBalance)}`}</div>
@@ -203,7 +204,7 @@ export default function Home() {
             {hideBalance ? <EyeOpen className="w-5 h-5"/> : <EyeClose className="w-5 h-5"/>}
           </button>
         </div>
-        <div className="flex flex-row w-full gap-7 text-xs items-center justify-center mt-12 h-20">
+        <div className="flex flex-row w-full gap-7 text-[0.8rem] items-center justify-center mt-12 h-20">
           <button className="flex flex-col justify-center items-center gap-2">
             <div className="flex bg-blue-600 w-10 h-10 rounded-lg hover:w-11 hover:h-11 transition-all
             duration-300 items-center justify-center"
@@ -236,8 +237,7 @@ export default function Home() {
           <button 
           ref={filterButtonRef}
           className="py-1 px-3 bg-[#353535] rounded-2xl text-left
-    hover:bg-[#00ffcc] transition duration-300 ease-in-out
-    hover:text-black"
+    hover:bg-blue-600 transition duration-300 ease-in-out"
           onClick={() => setFilterOpen(prev => !prev)}>
           {`${selectedNetworks.length > 0 ? `Networks(${selectedNetworks.length})`
           : 'All networks'}`} 
