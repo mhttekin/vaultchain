@@ -253,33 +253,6 @@
   background-color: #00e6b8;
 }
 
- /* Navigation Bar */
- .bottom-navigation {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background-color: #1e1e1e; /* Darker background for the nav */
-  border-top: 1px solid #333333; /* Subtle border */
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 10px 0;
-  z-index: 10;
-}
-
-.nav-link {
-  color: #ffffff; /* White text for links */
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: bold;
-  padding: 5px 10px;
-  transition: color 0.3s ease;
-}
-
-.nav-link:hover {
-  color: #00ffcc; /* Highlight color on hover */
-}
-
 /* Other local styles */
 .pageWrapper {
   min-height: 100vh;
