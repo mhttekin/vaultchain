@@ -181,13 +181,19 @@ export default function Home() {
         )}
         </div> 
       </div>
-      <nav className="absolute bottom-5 border-t border-t-gray-700 
-    w-full flex justify-between px-[1.75rem] pt-2 self-center items-center
-    content-center">
-        <Link href="/">Home</Link>
-        <Link href="/transactions">Trans</Link>
-        <Link href="/transactionhistory">TH</Link>
-        <Link href="/wallet">Wallet</Link>
+      <nav className="bottom-navigation">
+        <Link href="/" className="nav-link">
+          Home
+        </Link>
+        <Link href="/transactions" className="nav-link">
+          Transactions
+        </Link>
+        <Link href="/transactionhistory" className="nav-link">
+          History
+        </Link>
+        <Link href="/wallet" className="nav-link">
+          Wallet
+        </Link>
       </nav>
 
       {/* Wallet Items */}

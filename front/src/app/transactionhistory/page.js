@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "./transactionHistory.module.css";
+import Link from "next/link";
 
 export default function TransactionHistory() {
   const [transactions, setTransactions] = useState([]);
@@ -35,10 +36,20 @@ export default function TransactionHistory() {
 
   return (
     <div className={styles.pageWrapper}>
-      <div className={styles.navbar}>
-        <a href="/" className={styles.navButton}>Home</a>
-        <a href="/wallet" className={styles.navButton}>Wallet</a>
-      </div>
+      <nav className="bottom-navigation">
+        <Link href="/" className="nav-link">
+          Home
+        </Link>
+        <Link href="/transactions" className="nav-link">
+          Transactions
+        </Link>
+        <Link href="/transactionhistory" className="nav-link">
+          History
+        </Link>
+        <Link href="/wallet" className="nav-link">
+          Wallet
+        </Link>
+      </nav>
 
       <div className={styles.historyPanel}>
         <h2 className={styles.title}>Transaction History</h2>

@@ -1,4 +1,122 @@
 /* General Styles */
+/* General Layout */
+body {
+  background-color: #121212; /* Dark background */
+  color: #ffffff; /* White text */
+  font-family: Arial, sans-serif;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+/* Navigation Bar */
+.bottom-navigation {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #1e1e1e; /* Darker background for the nav */
+  border-top: 1px solid #333333; /* Subtle border */
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  z-index: 10;
+}
+
+.nav-link {
+  color: #ffffff; /* White text for links */
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 5px 10px;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #00ffcc; /* Highlight color on hover */
+}
+
+/* Welcome Section */
+.text-lg {
+  font-size: 1.25rem;
+  color: #cccccc; /* Subtle gray for smaller text */
+}
+
+.text-2xl {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ffffff; /* Bright white for emphasis */
+}
+
+/* Wallet Section */
+.text-3xl {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #00ffcc; /* Highlight color for balance */
+}
+
+.border-b {
+  border-bottom: 1px solid #333333; /* Subtle border */
+}
+
+.coin-name {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.no-balances {
+  color: #cccccc;
+  text-align: center;
+  font-size: 1rem;
+}
+
+/* Buttons */
+button {
+  background-color: #353535;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #00ffcc; /* Highlight color on hover */
+  color: #000000; /* Black text on hover */
+}
+
+/* Dropdown */
+.absolute {
+  position: absolute;
+}
+
+.bg-[#252525] {
+  background-color: #252525;
+}
+
+.rounded-t-xl {
+  border-radius: 12px 12px 0 0;
+}
+
+.shadow {
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.border-t-2 {
+  border-top: 2px solid #333333;
+}
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;

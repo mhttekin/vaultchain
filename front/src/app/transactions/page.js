@@ -1,6 +1,8 @@
 'use client';
 import React, { useState } from 'react';
 import './transactions.css';
+import Link from "next/link";
+
 
 const TransactionsPage = () => {
   const [transactions, setTransactions] = useState([
@@ -37,6 +39,20 @@ const TransactionsPage = () => {
   return (
     <div className="transactions-container">
       <h1>My Wallet</h1>
+      <nav className="bottom-navigation">
+        <Link href="/" className="nav-link">
+          Home
+        </Link>
+        <Link href="/transactions" className="nav-link">
+          Transactions
+        </Link>
+        <Link href="/transactionhistory" className="nav-link">
+          History
+        </Link>
+        <Link href="/wallet" className="nav-link">
+          Wallet
+        </Link>
+      </nav>
       <div className="balance">Balance: 3.45 ETH</div>
 
       <div className="send-section">

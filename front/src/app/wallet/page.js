@@ -73,6 +73,7 @@ export default function WalletPage() {
       const response = await axiosInstance.get(
         "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd"
       );
+
       setMarketData({
         BTC: { price: response.data.bitcoin.usd },
         ETH: { price: response.data.ethereum.usd },
@@ -144,10 +145,12 @@ export default function WalletPage() {
 
   return (
     <div className="walletpage-container">
-      <div className="walletpage-navbar">
-        <Link href="/">Home</Link>
-        <h2>Wallet</h2>
-        <button className="walletpage-transfer-btn" onClick={() => setShowTransfer(true)}>Send Crypto</button>
+      {/* Add the header here */}
+      <div className="walletpage-header">
+        <h1>Welcome, {user?.first_name}</h1>
+        <p className="walletpage-info">
+          The values displayed below reflect the current market prices.
+        </p>
       </div>
 
       <div className="walletpage-ticker">
@@ -157,9 +160,10 @@ export default function WalletPage() {
       </div>
 
       <div className="walletpage-content">
-        <h1>Welcome, {user?.first_name}</h1>
         <h2>Total Portfolio Value: ${totalValue.toFixed(2)}</h2>
-
+        <button className="walletpage-transfer-btn" onClick={() => setShowTransfer(true)}>Send Crypto</button>
+        <button onClick={fetchWallets}>Refresh</button>
+        
         {wallets.map((wallet) => (
           <div key={wallet.id} className="walletpage-wallet">
             <h3>{wallet.chain.symbol} Wallet</h3>
@@ -254,6 +258,20 @@ export default function WalletPage() {
           </div>
         </div>
       )}
+      <nav className="bottom-navigation">
+        <Link href="/" className="nav-link">
+          Home
+        </Link>
+        <Link href="/transactions" className="nav-link">
+          Transactions
+        </Link>
+        <Link href="/transactionhistory" className="nav-link">
+          History
+        </Link>
+        <Link href="/wallet" className="nav-link">
+          Wallet
+        </Link>
+      </nav>
     </div>
   );
 }
