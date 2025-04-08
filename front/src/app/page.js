@@ -16,8 +16,8 @@ export default function Home() {
   const [networks, setNetworks] = useState(null);
   const [mainLoading, setMainLoading] = useState(true);
   const [selectedNetworks, setSelectedNetworks] = useState([]);
-  const [displayNetworks, setDisplayNetworks] = useState("All Networks");
 
+  const [hideBalance, setHideBalance] = useState(true);
   const [walletBalances, setWalletBalances] = useState(null);
   const [totalBalance, setTotalBalance] = useState(0.0);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -186,21 +186,29 @@ export default function Home() {
       </div>
 
       {/* Wallet Items */}
-      <div className="w-full flex flex-col mt-[4rem] border-b border-gray-700 pb-2 px-[1.75rem]">
-        <h2 className="text-5xl text-center">${formatBalance(totalBalance)}</h2>
-        <div className="flex flex-row w-full gap-8 text-xs items-center justify-center mt-10 h-20">
+      <div className="relative w-full flex flex-col items-center
+      mt-[3rem] border-b border-gray-700 pb-10 px-[1.75rem]">
+        <div className="flex flex-col justify-center items-center relative max-w-40">
+          <div className={`min-w-40 max-w-80 h-10 text-4xl text-center duration-300 transition-all
+            ${hideBalance ? 'bg-[rgba(180,235,255,0.7)] blur-xl rounded-lg' : ''}`}>{hideBalance ? '' : `$${formatBalance(totalBalance)}`}</div>
+          <button className="flex self-start absolute top-12 left-0"
+          onClick={() => setHideBalance(prev => !prev)}>
+            h
+          </button>
+        </div>
+        <div className="flex flex-row w-full gap-7 text-xs items-center justify-center mt-12 h-20">
           <button className="flex flex-col justify-center items-center gap-2">
-            <div className="flex bg-[#00bbff] w-10 h-10 rounded-lg"
+            <div className="flex bg-blue-600 w-10 h-10 rounded-lg"
             style={{boxShadow: '0 0px 20px -3px oklch(88.2% 0.059 254.128)'}}></div>
             <span className="flex text-center">Receive</span>
           </button> 
           <button className="flex flex-col justify-center items-center gap-2">
-            <div className="flex bg-[#00bbff] w-10 h-10 rounded-lg"
+            <div className="flex bg-blue-600 w-10 h-10 rounded-lg"
             style={{boxShadow: '0 0px 20px -3px oklch(88.2% 0.059 254.128)'}}></div>
             <span className="flex text-center">Send</span>
           </button> 
           <button className="flex flex-col items-center justify-center gap-2">
-            <div className="flex bg-[#00bbff] w-10 h-10 rounded-lg"
+            <div className="flex bg-blue-600 w-10 h-10 rounded-lg"
             style={{boxShadow: '0 0px 20px -3px oklch(88.2% 0.059 254.128)'}}></div>
             <span className="flex text-center">Buy</span>
           </button> 
@@ -208,7 +216,7 @@ export default function Home() {
         
       </div>
       <div className="flex w-full px-[1.75rem] flex-col">
-        <div className="flex flex-col items-start my-5">
+        <div className="flex flex-col items-start mt-5 mb-2">
           <button 
           ref={filterButtonRef}
           className="py-1 px-3 bg-[#353535] rounded-2xl text-left
@@ -249,11 +257,13 @@ export default function Home() {
         pb-20 relative w-full mt-10">
           <div className="flex w-full">
             {walletBalances && (
-              <div className="flex flex-col gap-8 w-full">
+              <div className="flex flex-col gap-4 w-full">
                 {getFilteredBalances().length > 0 ? (
                   getFilteredBalances().map((balance) => (
                     <div key={balance.id} className="flex flex-row w-full gap-2
-                    items-center">
+                    items-center bg-[#252525] rounded-lg py-2 px-2 hover:bg-[#303030] transition-all
+                    duration-300"
+                    style={{boxShadow: '0px 0px 120px -22px oklch(54.6% 0.245 262.881)'}}>
                       <img
                         src={
                           balance.coin.symbol.toLowerCase() === "btc"
@@ -265,14 +275,16 @@ export default function Home() {
                             : "/assets/default.png" // Fallback for unknown coins
                         }
                         alt={balance.coin.name}
-                        className="w-10 h-10"
+                        className="w-8 h-8"
                       />
                       <div className="w-full flex flex-row items-center justify-between">
                         <span className="pl-1 coin-name">{balance.coin.name}</span>
                         <div className="flex flex-col w-full items-end">
-                          <span className="text-[1rem]">
-                          ${isNaN(balance.amount * balance.coin.price) ? "0.00" : formatBalance(balance.amount * balance.coin.price)}
-                          </span>
+                          <div className={`text-[1rem] duration-300 transition-all min-w-10 h-6
+                          ${hideBalance ? 'bg-[rgba(180,235,255,0.7)] blur-sm rounded-lg' : ''}`}>
+                          {hideBalance ? '' : `${isNaN(balance.amount * balance.coin.price) ? "$0.00"
+                          : formatBalance(balance.amount * balance.coin.price)}`}
+                          </div>
                           <span className="text-gray-400 text-sm">
                             {balance.amount} {balance.coin.symbol}
                           </span>
