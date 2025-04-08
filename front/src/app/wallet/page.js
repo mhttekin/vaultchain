@@ -188,13 +188,6 @@ export default function WalletPage() {
           </div>
         ))}
 
-        <h2>Activity Log</h2>
-        {transactions.map((tx) => (
-          <div key={tx.id} className="walletpage-transaction">
-            <p>{tx.transaction_type.toUpperCase()} {tx.amount} {tx.coin_symbol}</p>
-            <p>{new Date(tx.timestamp).toLocaleString()}</p>
-          </div>
-        ))}
 
         {error && <p className="walletpage-error">{error}</p>}
       </div>
