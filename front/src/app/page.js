@@ -4,8 +4,14 @@ import axiosInstance from "../lib/axios";
 import React, { useEffect, useState, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
-import Link from "next/link"; // Import Link for navigation
-import "./mainpage.css";
+import Link from "next/link";
+import EyeOpen from "../components/icons/eye-open.svg";
+import EyeClose from "../components/icons/eye-close.svg";
+import Copy from "../components/icons/copy.svg";
+import Send from "../components/icons/send.svg";
+import Buy from "../components/icons/cart.svg";
+import Settings from "../components/icons/settings.svg";
+
 
 
 export default function Home() {
@@ -17,7 +23,7 @@ export default function Home() {
   const [mainLoading, setMainLoading] = useState(true);
   const [selectedNetworks, setSelectedNetworks] = useState([]);
 
-  const [hideBalance, setHideBalance] = useState(true);
+  const [hideBalance, setHideBalance] = useState(false);
   const [walletBalances, setWalletBalances] = useState(null);
   const [totalBalance, setTotalBalance] = useState(0.0);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -138,7 +144,10 @@ export default function Home() {
   };
 
   const formatBalance = (balance) => {
-    return Number(balance).toFixed(2);
+    return Number(balance).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   };
 
   if (loading) {
@@ -157,20 +166,18 @@ export default function Home() {
         </div>
       )}
       <div className="flex flex-row justify-between items-start mt-14 mx-[1.75rem]">
-        <div className="w-auto flex flex-col justify-start">
+        <div className="w-auto flex flex-col justify-start text-gray-200">
           <span
           className="text-lg">Welcome</span>
-          <span className="text-2xl">{user.first_name} {user.last_name}</span>
+          <span className="text-xl">{user.first_name} {user.last_name}</span>
         </div>
         <div className="relative">
         <button
         ref={settingsRef}
-        className="bg-[#353535] cursor-pointer rounded-lg
-    py-2 px-3 hover:bg-[#00ffcc] transition duration-300
-    ease-in-out hover:text-black"
+        className="cursor-pointer rounded-lg hover:shadow-white shadow p-1"
 
         onClick={() => setSettingsOpen(prev => !prev)}>
-          Settings 
+          <Settings className="w-6 h-6"/> 
         </button>
         {settingsOpen && (
           <div
@@ -190,26 +197,35 @@ export default function Home() {
       mt-[3rem] border-b border-gray-700 pb-10 px-[1.75rem]">
         <div className="flex flex-col justify-center items-center relative max-w-40">
           <div className={`min-w-40 max-w-80 h-10 text-4xl text-center duration-300 transition-all
-            ${hideBalance ? 'bg-[rgba(180,235,255,0.7)] blur-xl rounded-lg' : ''}`}>{hideBalance ? '' : `$${formatBalance(totalBalance)}`}</div>
-          <button className="flex self-start absolute top-12 left-0"
+            ${hideBalance ? 'bg-[rgba(180,235,255,1)] blur-3xl rounded-lg' : ''}`}>{hideBalance ? '' : `$${formatBalance(totalBalance)}`}</div>
+          <button className="flex self-start absolute top-[3.5rem] -left-2"
           onClick={() => setHideBalance(prev => !prev)}>
-            h
+            {hideBalance ? <EyeOpen className="w-5 h-5"/> : <EyeClose className="w-5 h-5"/>}
           </button>
         </div>
         <div className="flex flex-row w-full gap-7 text-xs items-center justify-center mt-12 h-20">
           <button className="flex flex-col justify-center items-center gap-2">
-            <div className="flex bg-blue-600 w-10 h-10 rounded-lg"
-            style={{boxShadow: '0 0px 20px -3px oklch(88.2% 0.059 254.128)'}}></div>
+            <div className="flex bg-blue-600 w-10 h-10 rounded-lg hover:w-11 hover:h-11 transition-all
+            duration-300 items-center justify-center"
+            style={{boxShadow: '0 0px 20px -7px oklch(88.2% 0.059 254.128)'}}>
+              <Copy className="w-6 h-6"/>
+            </div>
             <span className="flex text-center">Receive</span>
           </button> 
           <button className="flex flex-col justify-center items-center gap-2">
-            <div className="flex bg-blue-600 w-10 h-10 rounded-lg"
-            style={{boxShadow: '0 0px 20px -3px oklch(88.2% 0.059 254.128)'}}></div>
+            <div className="flex bg-blue-600 w-10 h-10 rounded-lg hover:w-11 hover:h-11 transition-all
+            duration-300 items-center justify-center"
+            style={{boxShadow: '0 0px 20px -7px oklch(88.2% 0.059 254.128)'}}>
+              <Send className="w-6 h-6"/>
+            </div>
             <span className="flex text-center">Send</span>
           </button> 
           <button className="flex flex-col items-center justify-center gap-2">
-            <div className="flex bg-blue-600 w-10 h-10 rounded-lg"
-            style={{boxShadow: '0 0px 20px -3px oklch(88.2% 0.059 254.128)'}}></div>
+            <div className="flex bg-blue-600 w-10 h-10 rounded-lg hover:w-11 hover:h-11 transition-all
+            duration-300 items-center justify-center"
+            style={{boxShadow: '0 0px 20px -7px oklch(88.2% 0.059 254.128)'}}>
+              <Buy className="w-6 h-6"/>
+            </div>
             <span className="flex text-center">Buy</span>
           </button> 
         </div>
@@ -280,8 +296,8 @@ export default function Home() {
                       <div className="w-full flex flex-row items-center justify-between">
                         <span className="pl-1 coin-name">{balance.coin.name}</span>
                         <div className="flex flex-col w-full items-end">
-                          <div className={`text-[1rem] duration-300 transition-all min-w-10 h-6
-                          ${hideBalance ? 'bg-[rgba(180,235,255,0.7)] blur-sm rounded-lg' : ''}`}>
+                          <div className={`text-[1rem] duration-300 transition-all min-w-10 h-6 
+                          ${hideBalance ? 'bg-[rgba(180,235,255,0.1)] blur-sm rounded-lg' : ''}`}>
                           {hideBalance ? '' : `${isNaN(balance.amount * balance.coin.price) ? "$0.00"
                           : formatBalance(balance.amount * balance.coin.price)}`}
                           </div>
