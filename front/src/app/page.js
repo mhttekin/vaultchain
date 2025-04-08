@@ -8,7 +8,6 @@ import Link from "next/link"; // Import Link for navigation
 import "./mainpage.css";
 
 
-
 export default function Home() {
   const { user, loading, logout } = useAuth();
   const router = useRouter();
@@ -185,17 +184,6 @@ export default function Home() {
         )}
         </div> 
       </div>
-      <nav className="bottom-navigation">
-        <Link href="/" className="nav-link">
-          Home
-        </Link>
-        <Link href="/transactionhistory" className="nav-link">
-          History
-        </Link>
-        <Link href="/wallet" className="nav-link">
-          Wallet
-        </Link>
-      </nav>
 
       {/* Wallet Items */}
       <div className="w-full flex mt-20 border-b border-gray-700 pb-2 px-[1.75rem]">

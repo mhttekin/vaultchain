@@ -36,18 +36,6 @@ export default function TransactionHistory() {
 
   return (
     <div className={styles.pageWrapper}>
-      <nav className="bottom-navigation">
-        <Link href="/" className="nav-link">
-          Home
-        </Link>
-        <Link href="/transactionhistory" className="nav-link">
-          History
-        </Link>
-        <Link href="/wallet" className="nav-link">
-          Wallet
-        </Link>
-      </nav>
-
       <div className={styles.historyPanel}>
         <h2 className={styles.title}>Transaction History</h2>
 
