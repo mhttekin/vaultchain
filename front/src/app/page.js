@@ -203,6 +203,8 @@ export default function Home() {
       {/* Wallet Items */}
       <div className="w-full flex mt-20 border-b border-gray-700 pb-2 px-[1.75rem]">
         <h2 className="text-3xl font-bold">${formatBalance(totalBalance)}</h2>
+        <div></div>
+        
       </div>
       <div className="flex w-full px-[1.75rem] flex-col">
         <div className="flex flex-col items-start my-5">
@@ -223,12 +225,13 @@ export default function Home() {
             justify-center gap-2 rounded-t-xl shadow border-t-2 border-gray-600/50">
               <button onClick={() => toggleNetwork('')}
               className={`w-full flex py-1 px-3 rounded-sm ${
-                selectedNetworks.length === 0 ? 'bg-[#151515]' : ''
+                selectedNetworks.length === 0 ? 'bg-[#151515] shadow-md inset-shadow' : ''
               }`}>All networks</button>
               {networks.map(chain => (
                 <button key={chain}
                 className={`w-full flex py-1 px-3 ${
-                selectedNetworks.includes(chain) ? 'bg-[#151515]' : ''
+                selectedNetworks.includes(chain) ? 
+                    'bg-[#151515] shadow-md inset-shadow' : ''
               }`}
                 onClick={() => toggleNetwork(chain)}>
                 {chain}
@@ -237,7 +240,7 @@ export default function Home() {
               <button 
               onClick={() => setFilterOpen(false)}
               className="w-full flex justify-center rounded-2xl py-3 p-2
-              bg-[#353535] mt-5">Done</button>
+              bg-[#353535] mt-5 hover:bg-[#00ffcc] duration-300 ease-in-out hover:text-black shadow-md">Done</button>
             </div>
           )}
         </div>
