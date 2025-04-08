@@ -160,7 +160,7 @@ class ChainListView(generics.ListAPIView):
 Now after these we definitely need a transactionhistory model, serializer, and a get view,
 also add a services method so we can create a record when deposit or withdraw.
 Also, probably transaction model, serializer, put view, a method in services which will update
-the balance of recipient wallet address yadaydaydadyadayyad of amk
+the balance of recipient wallet address
 """
 class TransactionHistoryView(generics.ListAPIView):
     serializer_class = TransactionViewSerializer
