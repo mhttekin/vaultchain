@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import axiosInstance from "../../lib/axios";
-import "./dashboard.css";
+import axiosInstance from "../../../lib/axios";
+//import "dashboard.css";
 
 export default function AdminDashboard() {
   const router = useRouter();
