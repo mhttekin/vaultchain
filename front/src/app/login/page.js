@@ -78,40 +78,40 @@ export default function Auth() {
   // Falling items logic
   useEffect(() => {
     // Ensure the container exists
-    if (!fallingContainerRef.current) {
-      console.error("Falling container not found!");
-      return;
-    }
+    const timeout = setTimeout(() => {
+    if (fallingContainerRef && fallingContainerRef.current){
+      const fallingContainer = fallingContainerRef.current;
+      const assets = ["/assets/bitcoin.png", "/assets/ethereum.png", "/assets/solana.png"]; // Add your PNG paths here
 
-    const fallingContainer = fallingContainerRef.current;
-    const assets = ["/assets/bitcoin.png", "/assets/ethereum.png", "/assets/solana.png"]; // Add your PNG paths here
+      function createFallingItem() {
+        const item = document.createElement("img");
+        item.src = assets[Math.floor(Math.random() * assets.length)]; // Randomly select an asset
+        item.className = "falling-item";
+        item.style.left = `${Math.random() * 100}vw`; // Random horizontal position
+        item.style.animationDuration = `${Math.random() * 3 + 2}s`; // Random fall duration
+        item.style.animationDelay = `${Math.random() * 1}s`; // Random delay
+        fallingContainer.appendChild(item);
 
-    function createFallingItem() {
-      const item = document.createElement("img");
-      item.src = assets[Math.floor(Math.random() * assets.length)]; // Randomly select an asset
-      item.className = "falling-item";
-      item.style.left = `${Math.random() * 100}vw`; // Random horizontal position
-      item.style.animationDuration = `${Math.random() * 3 + 2}s`; // Random fall duration
-      item.style.animationDelay = `${Math.random() * 1}s`; // Random delay
-      fallingContainer.appendChild(item);
-
-      // Remove the item after the animation ends
-      item.addEventListener("animationend", () => {
-        item.remove();
-      });
-    }
-
-    function createFallingBatch() {
-      const batchSize = 10; // Number of coins to create in each batch
-      for (let i = 0; i < batchSize; i++) {
-        createFallingItem();
+        // Remove the item after the animation ends
+        item.addEventListener("animationend", () => {
+          item.remove();
+        });
       }
+
+      function createFallingBatch() {
+        const batchSize = 10; // Number of coins to create in each batch
+        for (let i = 0; i < batchSize; i++) {
+          createFallingItem();
+        }
+      }
+
+      // Create a batch of falling items every 3 seconds
+      const interval = setInterval(createFallingBatch, 3000);
+
+      return () => clearInterval(interval); // Cleanup on component unmount
     }
-
-    // Create a batch of falling items every 3 seconds
-    const interval = setInterval(createFallingBatch, 3000);
-
-    return () => clearInterval(interval); // Cleanup on component unmount
+    }, 100); // waits to fully load the dom 
+    return () => clearTimeout(timeout);
   }, []);
 
   if (loading) {

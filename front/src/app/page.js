@@ -166,13 +166,17 @@ export default function Home() {
         <div className="relative">
         <button
         ref={settingsRef}
+        className="bg-[#353535] cursor-pointer rounded-lg
+    py-2 px-3 hover:bg-[#00ffcc] transition duration-300
+    ease-in-out hover:text-black"
+
         onClick={() => setSettingsOpen(prev => !prev)}>
           Settings 
         </button>
         {settingsOpen && (
           <div
           ref={settingsBarRef}
-          className="absolute top-8 -left-2 flex flex-col gap-2 bg-[#252525] 
+          className="absolute top-10 left-0 flex flex-col gap-2 bg-[#252525] 
           border w-[5.1rem] h-20 p-1 py-2 rounded-lg border-white justify-center">
             <Link href="/profile" className="border-b border-b-gray-700/50 pb-2">
             Profile</Link>
@@ -204,7 +208,9 @@ export default function Home() {
         <div className="flex flex-col items-start my-5">
           <button 
           ref={filterButtonRef}
-          className="py-1 px-3 bg-[#353535] rounded-2xl text-left"
+          className="py-1 px-3 bg-[#353535] rounded-2xl text-left
+    hover:bg-[#00ffcc] transition duration-300 ease-in-out
+    hover:text-black"
           onClick={() => setFilterOpen(prev => !prev)}>
           {`${selectedNetworks.length > 0 ? `Networks(${selectedNetworks.length})`
           : 'All networks'}`} 

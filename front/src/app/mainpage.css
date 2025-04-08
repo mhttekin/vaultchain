@@ -81,7 +81,7 @@ body {
 }
 
 /* Buttons */
-button {
+.settings button {
   background-color: #353535;
   color: #ffffff;
   border: none;
@@ -91,7 +91,7 @@ button {
   transition: background-color 0.3s ease;
 }
 
-button:hover {
+.settings button:hover {
   background-color: #00ffcc; /* Highlight color on hover */
   color: #000000; /* Black text on hover */
 }
