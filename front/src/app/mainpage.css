@@ -21,24 +21,6 @@ body {
 /* Navigation Bar */
 
 
-/* Welcome Section */
-.text-lg {
-  font-size: 1.25rem;
-  color: #cccccc; /* Subtle gray for smaller text */
-}
-
-.text-2xl {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #ffffff; /* Bright white for emphasis */
-}
-
-/* Wallet Section */
-.text-3xl {
-  font-size: 3rem;
-  font-weight: bold;
-  color: #00ffcc; /* Highlight color for balance */
-}
 
 .border-b {
   border-bottom: 1px solid #333333; /* Subtle border */

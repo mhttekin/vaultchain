@@ -186,9 +186,25 @@ export default function Home() {
       </div>
 
       {/* Wallet Items */}
-      <div className="w-full flex mt-20 border-b border-gray-700 pb-2 px-[1.75rem]">
-        <h2 className="text-3xl font-bold">${formatBalance(totalBalance)}</h2>
-        <div></div>
+      <div className="w-full flex flex-col mt-[4rem] border-b border-gray-700 pb-2 px-[1.75rem]">
+        <h2 className="text-5xl text-center">${formatBalance(totalBalance)}</h2>
+        <div className="flex flex-row w-full gap-8 text-xs items-center justify-center mt-10 h-20">
+          <button className="flex flex-col justify-center items-center gap-2">
+            <div className="flex bg-[#00bbff] w-10 h-10 rounded-lg"
+            style={{boxShadow: '0 0px 20px -3px oklch(88.2% 0.059 254.128)'}}></div>
+            <span className="flex text-center">Receive</span>
+          </button> 
+          <button className="flex flex-col justify-center items-center gap-2">
+            <div className="flex bg-[#00bbff] w-10 h-10 rounded-lg"
+            style={{boxShadow: '0 0px 20px -3px oklch(88.2% 0.059 254.128)'}}></div>
+            <span className="flex text-center">Send</span>
+          </button> 
+          <button className="flex flex-col items-center justify-center gap-2">
+            <div className="flex bg-[#00bbff] w-10 h-10 rounded-lg"
+            style={{boxShadow: '0 0px 20px -3px oklch(88.2% 0.059 254.128)'}}></div>
+            <span className="flex text-center">Buy</span>
+          </button> 
+        </div>
         
       </div>
       <div className="flex w-full px-[1.75rem] flex-col">

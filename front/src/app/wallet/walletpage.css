@@ -1,12 +1,6 @@
 /* Wallet Page Styles - matches dark theme */
 
 /* General Layout */
-body {
-  background-color: #121212; /* Dark background */
-  color: #ffffff; /* White text */
-  font-family: Arial, sans-serif;
-}
-
 .w-full {
   width: 100%;
 }
@@ -56,7 +50,7 @@ body {
 }
 
 /* Buttons */
-button {
+.myBUTTON button {
   background-color: #353535;
   color: #ffffff;
   border: none;
@@ -66,7 +60,7 @@ button {
   transition: background-color 0.3s ease;
 }
 
-button:hover {
+.myBUTTON button:hover {
   background-color: #00ffcc; /* Highlight color on hover */
   color: #000000; /* Black text on hover */
 }

@@ -159,7 +159,7 @@ export default function WalletPage() {
         ))}
       </div>
 
-      <div className="walletpage-content">
+      <div className="walletpage-content myBUTTON">
         <h2>Total Portfolio Value: ${totalValue.toFixed(2)}</h2>
         <button className="walletpage-transfer-btn" onClick={() => setShowTransfer(true)}>Send Crypto</button>
         <button onClick={fetchWallets}>Refresh</button>
