@@ -262,9 +262,6 @@ export default function WalletPage() {
         <Link href="/" className="nav-link">
           Home
         </Link>
-        <Link href="/transactions" className="nav-link">
-          Transactions
-        </Link>
         <Link href="/transactionhistory" className="nav-link">
           History
         </Link>
