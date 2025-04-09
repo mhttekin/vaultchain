@@ -12,7 +12,6 @@ import Copy from "../components/icons/copy.svg";
 import Send from "../components/icons/send.svg";
 import Buy from "../components/icons/cart.svg";
 import Settings from "../components/icons/settings.svg";
-import { Josefin_Sans } from "next/font/google";
 
 
 
@@ -212,19 +211,19 @@ export default function Home() {
                 selectedNetworks.length === 0 ? 'bg-[#151515] shadow-md inset-shadow' : ''
               }`}>All networks</button>
               {networks.map(chain => (
-                <button key={chain}
+                <button key={chain.id}
                 className={`w-full flex py-1 px-3 ${
-                selectedNetworks.includes(chain) ? 
+                selectedNetworks.includes(chain.name) ? 
                     'bg-[#151515] shadow-md inset-shadow' : ''
               }`}
-                onClick={() => toggleNetwork(chain)}>
-                {chain}
+                onClick={() => toggleNetwork(chain.name)}>
+                {chain.name}
                 </button>
               ))}
               <button 
               onClick={() => setFilterOpen(false)}
               className="w-full flex justify-center rounded-2xl py-3 p-2
-              bg-[#353535] mt-5 hover:bg-[#00ffcc] duration-300 ease-in-out hover:text-black shadow-md">Done</button>
+              bg-[#353535] mt-5 hover:bg-blue-600 duration-300 ease-in-out shadow-md">Done</button>
             </div>
           )}
         </div>
