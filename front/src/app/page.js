@@ -3,6 +3,7 @@
 import axiosInstance from "../lib/axios";
 import React, { useEffect, useState, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
+import { useWallet } from "@/context/WalletContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import EyeOpen from "../components/icons/eye-open.svg";
@@ -17,15 +18,13 @@ import { Josefin_Sans } from "next/font/google";
 
 export default function Home() {
   const { user, loading, logout } = useAuth();
+  const {wallets, walletBalances, networks, walletLoading, refreshWalletData } = useWallet(); 
   const router = useRouter();
   const [error, setError] = useState("");
-  const [wallets, setWallets] = useState(null);
-  const [networks, setNetworks] = useState(null);
   const [mainLoading, setMainLoading] = useState(true);
   const [selectedNetworks, setSelectedNetworks] = useState([]);
 
   const [hideBalance, setHideBalance] = useState(false);
-  const [walletBalances, setWalletBalances] = useState(null);
   const [totalBalance, setTotalBalance] = useState(0.0);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
@@ -41,51 +40,9 @@ export default function Home() {
     }
   }, [user, loading, router]);
 
-  useEffect(() => {
-    if (user && !loading) {
-      const fetchWallets = async () => {
-        try {
-          const response = await axiosInstance.get("/api/wallets/");
-          setWallets(response.data);
-        } catch (error) {
-          setError(error);
-        }
-      };
-      fetchWallets();
-    }
-  }, [user, loading]);
-
 
   useEffect(() => {
-    if (user && wallets && wallets.length > 0) {
-      setMainLoading(true);
-      const fetchBalances = async () => {
-        try {
-          const balances = [];
-          const chains = [];
-          for (const wallet of wallets) {
-            if (!chains.includes(wallet.chain.name)){
-              chains.push(wallet.chain.name);
-            }
-            const response = await axiosInstance.get(
-              `/api/wallets/${wallet.id}/balances/`
-            );
-            balances.push(response.data[0]);
-          }
-          setWalletBalances(balances);
-          setNetworks(chains);
-        } catch (error) {
-          setError(error);
-          console.error(error);
-        } finally {
-          setMainLoading(false);
-        }
-      };
-      fetchBalances();
-    }
-  }, [user, wallets]);
-
-  useEffect(() => {
+    console.log(wallets);
     if (user && walletBalances && walletBalances.length > 0) {
       setMainLoading(true);
       let amount = 0.0;
@@ -213,7 +170,9 @@ export default function Home() {
             </div>
             <span className="flex text-center">Receive</span>
           </button> 
-          <button className="flex flex-col justify-center items-center gap-2">
+          <button 
+          onClick={() => router.push("/send")}
+          className="flex flex-col justify-center items-center gap-2">
             <div className="flex bg-blue-600 w-10 h-10 rounded-lg hover:w-11 hover:h-11 transition-all
             duration-300 items-center justify-center"
             style={{boxShadow: '0 0px 20px -7px oklch(88.2% 0.059 254.128)'}}>
@@ -277,19 +236,12 @@ export default function Home() {
                 {getFilteredBalances().length > 0 ? (
                   getFilteredBalances().map((balance) => (
                     <div key={balance.id} className="flex flex-row w-full gap-2
-                    items-center bg-[#252525] rounded-lg py-2 px-2 hover:bg-[#303030] transition-all
+                    items-center bg-[rgba(25,25,25,0.3)] rounded-lg py-3 px-2 
+                    hover:bg-[rgba(30,30,30,0.4)] transition-all
                     duration-300"
                     style={{boxShadow: '0px 0px 120px -22px oklch(54.6% 0.245 262.881)'}}>
                       <img
-                        src={
-                          balance.coin.symbol.toLowerCase() === "btc"
-                            ? "/assets/bitcoin.png"
-                            : balance.coin.symbol.toLowerCase() === "eth"
-                            ? "/assets/ethereum.png"
-                            : balance.coin.symbol.toLowerCase() === "sol"
-                            ? "/assets/solana.png"
-                            : "/assets/default.png" // Fallback for unknown coins
-                        }
+                        src={`/assets/${balance.coin.chain.name}.png`}
                         alt={balance.coin.name}
                         className="w-8 h-8"
                       />

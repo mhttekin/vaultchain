@@ -2,6 +2,7 @@
 import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
 import { AuthProvider } from "../context/AuthContext";
+import { WalletProvider } from "../context/WalletContext";
 
 export default function LayoutWrapper({ children }) {
   const pathName = usePathname();
@@ -10,8 +11,10 @@ export default function LayoutWrapper({ children }) {
 
   return (
     <AuthProvider>
-      {children}
-      {!hideNavbar && <Navbar />}
+      <WalletProvider>
+        {children}
+        {!hideNavbar && <Navbar />}
+      </WalletProvider>
     </AuthProvider>
   );
 }
