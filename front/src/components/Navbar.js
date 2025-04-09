@@ -5,6 +5,7 @@ import "./Navbar.css";
 import Home from "./icons/home.svg";
 import History from "./icons/transcript.svg";
 import Wallet from "./icons/wallet.svg"; 
+import Transfer from "./icons/transfer.svg";
 import { usePathname } from "next/navigation";
 
 
@@ -22,6 +23,9 @@ const Navbar = () => {
         </Link>
         <Link href="/transactionhistory" className="nav-link">
           <History className={`w-6 h-6 ${pathName === "/transactionhistory" ? 'stroke-blue-600' : 'stroke-white'}`}/>
+        </Link>
+        <Link href="/send" className="nav-link">
+          <Transfer className={`w-6 h-6 ${pathName === "/send" ? 'stroke-blue-600' : 'stroke-white'}`}/>
         </Link>
         <Link href="/wallet" className="nav-link">
           <Wallet className={`w-6 h-6 ${pathName === "/wallet" ? 'fill-blue-600' : 'fill-white'}`}/>

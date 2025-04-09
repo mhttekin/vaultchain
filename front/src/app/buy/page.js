@@ -5,18 +5,15 @@ import { useRouter } from "next/navigation";
 import { useWallet } from "@/context/WalletContext";
 import TransferIcon from "@/components/icons/transfer.svg";
 import BackArrow from "@/components/icons/back-arrow.svg"
-import axiosInstance from "@/lib/axios";
 
-const SendPage = () => {
+const BuyPage = () => {
   const {walletBalances, updateWalletBalance,
     refreshWalletData, walletLoading, marketData} = useWallet();
   const [inputValue, setInputValue] = useState("");
   const [balancesTabOpen, setBalancesTabOpen] = useState(false);
-  const [sendAddress, setSendAddress] = useState(null);
   const [confirmSendTab, setConfirmSendTab] = useState(false);
   const [error, setError] = useState(null);
-  const [searchResult, setSearchResult] = useState(null);
-  const [addressTabOpen, setAddressTabOpen] = useState(false);
+  const [isDeposit, setIsDeposit] = useState(true);
   const [usdMode, setUsdMode] = useState(true);
   const [activeWalletBalance, setActiveWalletBalance] = useState(null);
   const { user, loading } = useAuth();
@@ -60,14 +57,10 @@ const SendPage = () => {
   ];
 
   const handleInputChange = (val) => {
+    if (error) setError(null);
     if (val === "DEL"){
       if (Number(inputValue) === 0) setInputValue("");
       else setInputValue(prev => prev.slice(0, -1));
-      if ((usdMode && Number(inputValue.slice(0, - 1)) <= activeWalletBalance.amount 
-        * marketData[activeWalletBalance.coin.symbol].price )|| (!usdMode 
-        && Number(inputValue.slice(0, -1)) > activeWalletBalance.amount)){
-        setError(null);
-      }
       return
     } else {
       if (val === "." && inputValue.includes(".")) return;
@@ -81,11 +74,6 @@ const SendPage = () => {
       const wholePartLength = isDecimalMode ? decimalIndex : inputValue.length;
       if (!isDecimalMode && wholePartLength >= 11) return;
       setInputValue(prev => prev + val);
-      if ((usdMode && Number(inputValue + val) > activeWalletBalance.amount 
-        * marketData[activeWalletBalance.coin.symbol].price )|| (!usdMode 
-        && Number(inputValue + val) > activeWalletBalance.amount)){
-        setError("Insufficient Funds to Transfer");
-      }
     }
   };
 
@@ -109,33 +97,6 @@ const SendPage = () => {
     }
   };
 
-  const handleMaxPress = () => {
-    if (marketData && activeWalletBalance) {
-      const sym = activeWalletBalance.coin.symbol?.toUpperCase();
-      const price = Number(marketData[sym]?.price || 0); 
-      if (usdMode) setInputValue(String(Number(activeWalletBalance.amount) * price))
-      else setInputValue(activeWalletBalance.amount);
-    }
-  };
-
-  const searchTheAddress = async (value, chainId) => {
-    if (value && axiosInstance){
-      try {
-        const response = await axiosInstance.get('/api/wallet-lookup/', {
-          params: {
-            search: value,
-            chain_id: chainId,
-          },
-        });
-        if (response?.data){
-          setSearchResult(response.data);
-        }
-      }catch (error) {
-        return null;
-      }
-    }
-  }; 
-
   const formatAddress = (address) => {
     if (address && address.length > 20) {
       return `${address.slice(0, 5)}...${address.slice(-4)}`; 
@@ -143,46 +104,40 @@ const SendPage = () => {
     return address;
   };
 
-  const handleSearchAddress = (e) => {
-    const address = e.target.value || "";
-    const isEmail = address.indexOf('@') !== -1;
-    const shouldSearch = (isEmail && address.includes('.')) || (!isEmail && address.length > 30);
-    if (shouldSearch && activeWalletBalance?.coin?.chain?.id) {
-      searchTheAddress(address, activeWalletBalance.coin.chain.id);
-    }
-  }
-
   const handleActiveBalance = (balance) => {
     if (activeWalletBalance) {
       setActiveWalletBalance(balance);
       setBalancesTabOpen(false);
     }
   };
-  const handleSendBalance = async () => {
-    if (activeWalletBalance && sendAddress && inputValue) {
-      let sendAmount = Number(inputValue);
-      if (usdMode) sendAmount /= marketData[activeWalletBalance.coin.chain.symbol].price;
-      const safeAmount = sendAmount.toFixed(8);
-      try {
-        const response = await axiosInstance.post('/api/transactions/create/',{
-          "sender_public_key": activeWalletBalance.wallet.public_key,
-          "recipient_public_key": sendAddress,
-          "coin_id": activeWalletBalance.coin.id,
-          "amount": safeAmount,
-        });
-      } catch (error) {
-        console.warn('Could not transfer',error);
+
+  const handleBalanceChange = () => {
+    if (activeWalletBalance && marketData){
+      const balance = Number(activeWalletBalance.amount);
+      const changeAmount = usdMode ? Number(inputValue) / 
+        marketData[activeWalletBalance.coin.chain.symbol].price : Number(inputValue);
+
+      if (!isDeposit && changeAmount > balance) {
+        // Show an error message to the user
+        setError("Insufficient balance for withdrawal");
         return;
       }
-      refreshWalletData();
-      router.push("/");
-    }
-  }; 
-  const handleAddressSave = () => {
-    if (searchResult) {
-      setSendAddress(searchResult?.wallet?.public_key);
-      setAddressTabOpen(false);
-      setConfirmSendTab(true);
+
+      const rawFinalBalance = isDeposit
+      ? balance + changeAmount
+      : balance - changeAmount;
+
+      const finalBalance = parseFloat(rawFinalBalance.toFixed(8));
+      try{
+        updateWalletBalance(activeWalletBalance.wallet.id, activeWalletBalance.coin.id, finalBalance);
+        setConfirmSendTab(false);
+        refreshWalletData();
+        router.push('/');
+      }catch (error) {
+        console.error(error);
+        setConfirmSendTab(false);
+        return null;
+      }
     }
   };
 
@@ -195,7 +150,6 @@ const SendPage = () => {
   useEffect(() => {
     if (user && walletBalances && !walletLoading){
       setActiveWalletBalance(walletBalances[0]);
-      console.log(walletBalances);
     }
   }, [user, walletBalances, walletLoading]);
 
@@ -235,40 +189,11 @@ const SendPage = () => {
           )}
         </div>
       )}
-      {addressTabOpen && (
-        <div className="w-full h-[93.5vh] flex flex-col absolute top-0 left-0 z-999 bg-[#000000] px-3">
-          <div className="w-full flex justify-start mt-10 items-center gap-4">
-            <BackArrow className="w-5 h-5 cursor-pointer" onMouseDown={() => setAddressTabOpen(false)}/>
-            <h1 className="text-2xl font-bold">Choose recipient</h1>
-          </div>
-          <div className="w-full flex mt-10 px-3 border-b border-gray-600 pb-5">
-            <input
-              type="text"
-              placeholder="Email or public key"
-              onChange={(e) => handleSearchAddress(e)}
-              className="w-full px-5 py-3 border border-gray-300 rounded-3xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-sm"
-            />
-          </div>
-          <div className="flex mt-7 flex-col">
-            <h1 className="flex text-xl font-bold">Result</h1>
-            {searchResult && (
-            <button 
-              onClick={handleAddressSave}
-              className=" min-h-20 w-full flex flex-col gap-2 p-4 mt-5 text-start bg-[#151515]
-              rounded-2xl">
-              <h1 className="font-bold transition-all duration-150 text-sm hover:text-[16px]">{searchResult.wallet.user_email}</h1> 
-              <h1 className="font-light text-sm">{searchResult.wallet.public_key}</h1> 
-            </button>
-            )}
-          </div>
-        </div>
-      )}
-      {confirmSendTab && sendAddress && activeWalletBalance && (
+      {confirmSendTab && activeWalletBalance && (
         <div className="w-full h-[93.5vh] flex flex-col absolute top-0 left-0 z-999 bg-[#000000] px-3">
           <div className="w-full flex justify-start mt-10 items-center gap-4">
             <BackArrow className="w-5 h-5 cursor-pointer" onMouseDown={() => {
               setConfirmSendTab(false);
-              setAddressTabOpen(true);
             }}/>
             <h1 className="text-2xl font-bold">Send</h1>
           </div>
@@ -289,13 +214,13 @@ const SendPage = () => {
                 </div>
               </div>
               <div className="flex flex-row w-full py-1 h-full items-center justify-start">
-                <h2 className="text-sm text-start">{formatAddress(sendAddress)}</h2>
+                <h2 className="text-sm text-start">{formatAddress(activeWalletBalance.wallet.public_key)}</h2>
               </div>
             </div>
           </div>
           <div className="flex flex-col w-full mt-10 h-30">
             <div className="flex w-full p-5 justify-between">
-              <h1 className="text-sm font-bold flex text-start">Wallet Used:</h1>
+              <h1 className="text-sm font-bold flex text-start">Wallet:</h1>
               <h1 className="text-sm font-bold text-right">
                 {formatAddress(activeWalletBalance.wallet.public_key)}
               </h1>
@@ -312,21 +237,26 @@ const SendPage = () => {
                 $0.00
               </h1>
             </div>
+            <div className="flex w-full p-5 justify-between">
+              <h1 className="text-sm font-bold flex text-start">Action Type:</h1>
+              <h1 className="text-sm font-bold text-right">
+                {isDeposit ? "Deposit" : "Withdrawal"}
+              </h1>
+            </div>
           </div>
           <div className="flex flex-row mt-32 w-full items-start justify-center gap-2 font-bold">
             <button 
             onClick={() => {
               setConfirmSendTab(false);
-              setAddressTabOpen(false);
             }}
             className="w-full flex justify-center p-3 rounded-3xl bg-blue-600 hover:text-xl transition-all duration-300"
             style={{boxShadow: '0px 10px 120px -3px oklch(62.3% 0.214 259.815)'}}>
               <span>Cancel</span></button> 
             <button 
-            onClick={() => handleSendBalance()}
+            onClick={() => handleBalanceChange()}
             className="w-full flex justify-center p-3 rounded-3xl hover:text-xl transition-all duration-300
             bg-gradient-to-r from-blue-600 to-purple-500"
-            style={{boxShadow: '0px 10px 120px -3px oklch(62.7% 0.265 303.9)'}}><span>Send</span></button>
+            style={{boxShadow: '0px 10px 120px -3px oklch(62.7% 0.265 303.9)'}}><span>Confirm</span></button>
           </div>
         </div>
       )}
@@ -341,24 +271,15 @@ const SendPage = () => {
           <span className="font-normal text-gray-500">{'\u00A0'}{usdMode ? 'USD' :
               activeWalletBalance.coin.symbol}</span>
         </div>
-        <div className="flex h-32">
-          {!Number(inputValue) && (
-          <button 
-          onClick={handleMaxPress}
-          className="px-4 bg-[#353535] rounded-xl h-8
-          self-center flex items-center transition-all duration-300 hover:bg-[#404040]">
-            <span className="text-sm font-bold">Max</span>
-          </button>
-          )}
-        </div>  
       </div>
       <div className="-mt-2">
-        {activeWalletBalance && (
+        {error && (<h1 className="text-red-600 text-sm font-bold">{error}</h1>)}
+        {activeWalletBalance && !error && (
         <button
         onClick={handleModeChange}
-        className="flex flex-row text-sm font-[500] cursor-pointer items-center">
+        className="flex flex-row text-blue-600 text-sm font-[500] cursor-pointer items-center">
           <TransferIcon className="w-4 h-4 fill-blue-600"/>
-          <span className={`${error ? 'text-red-600' : 'text-blue-600'}`}>{error ? error : inputValue ? formatNumber(calculatedAmount(inputValue, usdMode, activeWalletBalance), true): "0.00"}</span>
+          <span>{inputValue ? formatNumber(calculatedAmount(inputValue, usdMode, activeWalletBalance), true): "0.00"}</span>
         </button>
         )}
       </div>
@@ -393,18 +314,25 @@ const SendPage = () => {
         </div>
       </div>
       <div className="flex flex-row flex-1 w-full items-start justify-center gap-2 font-bold">
-        <button className="w-full flex justify-center p-3 rounded-3xl bg-blue-600 hover:text-xl transition-all duration-300"
-        style={{boxShadow: '0px 10px 120px -3px oklch(62.3% 0.214 259.815)'}}>
-          <span>Receive</span></button> 
         <button 
-        onClick={() => setAddressTabOpen(true)}
+        onClick={() => {
+          setIsDeposit(false);
+          setConfirmSendTab(true);}}
+        className="w-full flex justify-center p-3 rounded-3xl hover:text-xl transition-all duration-300
+        bg-red-600/80"
+        style={{boxShadow: '0px 10px 120px -3px oklch(62.7% 0.265 303.9)'}}><span>Sell</span>
+      </button>
+      <button 
+        onClick={() => {
+          setIsDeposit(true);
+          setConfirmSendTab(true);}}
         className="w-full flex justify-center p-3 rounded-3xl hover:text-xl transition-all duration-300
         bg-gradient-to-r from-blue-600 to-purple-500"
-        style={{boxShadow: '0px 10px 120px -3px oklch(62.7% 0.265 303.9)'}}><span>Send</span></button>
+        style={{boxShadow: '0px 10px 120px -3px oklch(62.7% 0.265 303.9)'}}><span>Buy</span></button>
       </div>
     </div>
   );
 };
 
-export default SendPage;
+export default BuyPage;
 
