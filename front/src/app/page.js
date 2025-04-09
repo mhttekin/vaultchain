@@ -138,7 +138,7 @@ export default function Home() {
         {settingsOpen && (
           <div
           ref={settingsBarRef}
-          className="absolute top-8 -left-4 flex flex-col gap-2 bg-[#252525] 
+          className="absolute top-8 -left-4 flex flex-col gap-2 bg-[#000000] 
           w-[4.5rem] h-20 p-1 py-2 justify-center rounded-lg">
             <Link href="/profile" className="border-b border-b-gray-700/50 pb-2">
             Profile</Link>
