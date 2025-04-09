@@ -2,7 +2,7 @@
   position: fixed;
   bottom: 0;
   width: 100%;
-  background-color: #1e1e1e; /* Darker background for the nav */
+  background-color: #000000; /* Darker background for the nav */
   border-top: 1px solid #333333; /* Subtle border */
   display: flex;
   justify-content: space-around;
@@ -18,8 +18,4 @@
   font-weight: bold;
   padding: 5px 10px;
   transition: color 0.3s ease;
-}
-
-.nav-link:hover {
-  color: #00ffcc; /* Highlight color on hover */
 }

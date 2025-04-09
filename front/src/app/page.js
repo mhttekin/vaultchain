@@ -152,7 +152,7 @@ export default function Home() {
       <div className="relative w-full flex flex-col items-center
       mt-[4rem] border-b border-gray-700 pb-10 px-[1.75rem]">
         <div className="flex flex-col justify-center items-center relative max-w-40">
-          <div className={`min-w-40 max-w-80 h-10 ${String(totalBalance).length > 8 ? 'text-3xl' : 'text-4xl'}
+          <div className={`min-w-40 max-w-80 h-10 ${String(totalBalance).length > 5 ? 'text-3xl' : 'text-4xl'}
             text-center duration-300 transition-all
             ${hideBalance ? 'bg-[rgba(180,235,255,1)] blur-3xl rounded-lg' : ''}`}>
             {hideBalance ? '' : `$${formatBalance(totalBalance)}`}</div>
