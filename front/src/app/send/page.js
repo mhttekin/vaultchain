@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect, useMemo} from "react";
+import React, { useState, useEffect} from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useWallet } from "@/context/WalletContext";
@@ -90,7 +90,7 @@ const SendPage = () => {
   const handleModeChange = () => {
     if (marketData) {
       setUsdMode(prev => !prev);
-      setInputValue(calculatedAmount(inputValue, usdMode));
+      setInputValue(calculatedAmount(inputValue, usdMode, activeWalletBalance));
     }
   };
 
@@ -183,7 +183,7 @@ const SendPage = () => {
         onClick={handleModeChange}
         className="flex flex-row text-blue-600 text-sm font-[500] cursor-pointer items-center">
           <TransferIcon className="w-4 h-4 fill-blue-600"/>
-          <span>{inputValue ? formatNumber(calculatedAmount(inputValue, usdMode, balance), true): "0.00"}</span>
+          <span>{inputValue ? formatNumber(calculatedAmount(inputValue, usdMode, activeWalletBalance), true): "0.00"}</span>
         </button>
         )}
       </div>

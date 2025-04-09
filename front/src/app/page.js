@@ -17,7 +17,7 @@ import Settings from "../components/icons/settings.svg";
 
 export default function Home() {
   const { user, loading, logout } = useAuth();
-  const {wallets, walletBalances, networks, walletLoading, refreshWalletData } = useWallet(); 
+  const {wallets, walletBalances, networks, walletLoading, refreshWalletData, marketData } = useWallet(); 
   const router = useRouter();
   const [error, setError] = useState("");
   const [mainLoading, setMainLoading] = useState(true);
@@ -41,12 +41,11 @@ export default function Home() {
 
 
   useEffect(() => {
-    console.log(wallets);
     if (user && walletBalances && walletBalances.length > 0) {
       setMainLoading(true);
       let amount = 0.0;
       walletBalances.forEach((balance) => {
-        amount += Number(balance.amount);
+        amount += Number(balance.amount) * marketData[balance.coin.symbol].price;
       });
       setTotalBalance(amount);
       setMainLoading(false);
@@ -153,8 +152,10 @@ export default function Home() {
       <div className="relative w-full flex flex-col items-center
       mt-[4rem] border-b border-gray-700 pb-10 px-[1.75rem]">
         <div className="flex flex-col justify-center items-center relative max-w-40">
-          <div className={`min-w-40 max-w-80 h-10 text-4xl text-center duration-300 transition-all
-            ${hideBalance ? 'bg-[rgba(180,235,255,1)] blur-3xl rounded-lg' : ''}`}>{hideBalance ? '' : `$${formatBalance(totalBalance)}`}</div>
+          <div className={`min-w-40 max-w-80 h-10 ${String(totalBalance).length > 8 ? 'text-3xl' : 'text-4xl'}
+            text-center duration-300 transition-all
+            ${hideBalance ? 'bg-[rgba(180,235,255,1)] blur-3xl rounded-lg' : ''}`}>
+            {hideBalance ? '' : `$${formatBalance(totalBalance)}`}</div>
           <button className="flex self-start absolute top-[3.5rem] -left-2"
           onClick={() => setHideBalance(prev => !prev)}>
             {hideBalance ? <EyeOpen className="w-5 h-5"/> : <EyeClose className="w-5 h-5"/>}
@@ -249,8 +250,9 @@ export default function Home() {
                         <div className="flex flex-col w-full items-end">
                           <div className={`text-[1rem] duration-300 transition-all min-w-10 h-6 
                           ${hideBalance ? 'bg-[rgba(180,235,255,0.1)] blur-sm rounded-lg' : ''}`}>
-                          {hideBalance ? '' : `${isNaN(balance.amount * balance.coin.price) ? "$0.00"
-                          : formatBalance(balance.amount * balance.coin.price)}`}
+                          ${hideBalance ? '' : `${isNaN(balance.amount * marketData[balance.coin.symbol].price)
+                          ? "0.00"
+                          : formatBalance(balance.amount * marketData[balance.coin.symbol].price)}`}
                           </div>
                           <span className="text-gray-400 text-sm">
                             {balance.amount} {balance.coin.symbol}
