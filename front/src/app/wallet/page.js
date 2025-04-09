@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import axiosInstance from "../../lib/axios";
 import { useAuth } from "../../context/AuthContext";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import "./walletpage.css";
 
 export default function WalletPage() {
