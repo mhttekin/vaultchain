@@ -162,7 +162,9 @@ export default function Home() {
           </button>
         </div>
         <div className="flex flex-row w-full gap-7 text-[0.8rem] items-center justify-center mt-12 h-20">
-          <button className="flex flex-col justify-center items-center gap-2">
+          <button 
+          onClick={() => router.push('/receive')}
+          className="flex flex-col justify-center items-center gap-2">
             <div className="flex bg-blue-600 w-10 h-10 rounded-lg hover:w-11 hover:h-11 transition-all
             duration-300 items-center justify-center"
             style={{boxShadow: '0 0px 20px -7px oklch(88.2% 0.059 254.128)'}}>

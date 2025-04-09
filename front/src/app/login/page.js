@@ -68,10 +68,7 @@ export default function Auth() {
       registerForm.last_name
     );
     if (response.success) {
-      const response2 = await register(registerForm.email, registerForm.password);
-      if (response2.success){
         router.push("/");
-      }
     } else {
       setError(response.error);
     }

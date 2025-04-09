@@ -393,7 +393,7 @@ const SendPage = () => {
         </div>
       </div>
       <div className="flex flex-row flex-1 w-full items-start justify-center gap-2 font-bold">
-        <button className="w-full flex justify-center p-3 rounded-3xl bg-blue-600 hover:text-xl transition-all duration-300"
+        <button onClick={() => router.push('/receive')}className="w-full flex justify-center p-3 rounded-3xl bg-blue-600 hover:text-xl transition-all duration-300"
         style={{boxShadow: '0px 10px 120px -3px oklch(62.3% 0.214 259.815)'}}>
           <span>Receive</span></button> 
         <button 
