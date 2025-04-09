@@ -142,6 +142,8 @@ export default function WalletPage() {
       console.error(err);
     }
   };
+  if (!user) return null;
+  if (loading) return <p>Loading...</p>
 
   return (
     <div className="walletpage-container">

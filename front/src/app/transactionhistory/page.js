@@ -1,13 +1,25 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useAuth } from "@/context/AuthContext";
 import styles from "./transactionHistory.module.css";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 
 export default function TransactionHistory() {
+  const router = useRouter();
+  const { user, loading : userLoading } = useAuth(); 
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!user && !loading){
+      router.push('/login');
+    }
+  }, [user, loading, router]);
+
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
@@ -30,8 +42,8 @@ export default function TransactionHistory() {
         setLoading(false);
       });
   }, []);
-
-  if (loading) return <p className={styles.loading}>Loading...</p>;
+  if (!user) return null;
+  if (loading || userLoading) return <p className={styles.loading}>Loading...</p>;
   if (error) return <p className={styles.error}>{error}</p>;
 
   return (

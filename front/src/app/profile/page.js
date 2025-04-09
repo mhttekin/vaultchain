@@ -4,9 +4,11 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import styles from "./profile.module.css";
 import axiosInstance from "../../lib/axios";
+import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
-  const { user, setUser } = useAuth(); // Access user and setUser from context
+  const router = useRouter();
+  const { user, setUser, loading } = useAuth(); // Access user and setUser from context
   const [isEditingName, setIsEditingName] = useState(false);
   const [firstName, setFirstName] = useState(user?.first_name || "");
   const [lastName, setLastName] = useState(user?.last_name || "");
@@ -16,17 +18,23 @@ export default function ProfilePage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // Fetch the user's profile image when the component loads
-    const fetchProfileImage = async () => {
-      try {
-        const response = await axiosInstance.get("/api/user/profile-image/");
-        setProfileImage(response.data.profile_image); // Set the profile image URL
-      } catch (err) {
-        console.error("Failed to fetch profile image:", err);
-      }
-    };
+    if (!user && !loading) {
+      router.push('/login');
+    }
+  }, [user, loading, router]);
+  useEffect(() => {
+    if (user && !loading){
+      const fetchProfileImage = async () => {
+        try {
+          const response = await axiosInstance.get("/api/user/profile-image/");
+          setProfileImage(response.data.profile_image); // Set the profile image URL
+        } catch (err) {
+          console.error("Failed to fetch profile image:", err);
+        }
+      };
 
-    fetchProfileImage();
+      fetchProfileImage();
+    }
   }, []);
 
   const handleSaveName = async () => {
@@ -79,6 +87,8 @@ export default function ProfilePage() {
       setError("Failed to upload profile image.");
     }
   };
+  if (!user) return null;
+  if (loading) return <p>Loading...</p>
 
   return (
     <div className={styles.profileContainer}>
