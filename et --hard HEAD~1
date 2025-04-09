@@ -1,0 +1,276 @@
+[33mcommit 4ba8ee28c94b62ecc82df04766f3ea4e1c34c775[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/tuanaNew[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Wed Apr 9 19:20:19 2025 +0100
+
+    latest
+
+[33mcommit b8e630175f0907b9b9672211510dd17516d7c025[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Wed Apr 9 17:57:03 2025 +0100
+
+    send works / needs to check if the input exceeds the balance
+
+[33mcommit c0afaab9b7fe99d0562a3e46cefcee7cd70dbd88[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Wed Apr 9 17:39:09 2025 +0100
+
+    send mostly done
+
+[33mcommit c5e88149abf36f5411d31fab3ecfac2b1beeb36c[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Wed Apr 9 14:59:41 2025 +0100
+
+    commit farming bro
+
+[33mcommit 53e0e9435eb0ac188d413d9770de09c88d84da9c[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Wed Apr 9 14:49:34 2025 +0100
+
+    user checks for pages
+
+[33mcommit 02ccf5f4a979c73a9d30d7470d71b59d2b056219[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Wed Apr 9 14:39:35 2025 +0100
+
+    send first part done
+
+[33mcommit 78fcccc4ba8a111ba8658420ad9c6dd0c1f71c3b[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Wed Apr 9 05:32:31 2025 +0100
+
+    mi
+
+[33mcommit 2dc9fd6821508f4dcdfb50934f710ef99e268404[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Wed Apr 9 05:27:34 2025 +0100
+
+    for now
+
+[33mcommit be0bdb0d580385a9828056ab06abd6033df2354c[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Wed Apr 9 00:13:18 2025 +0100
+
+    dashboard done for now
+
+[33mcommit 113440b82825907dfa09b8d509093461a3a7786c[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Tue Apr 8 23:24:23 2025 +0100
+
+    so fineeeeeeeeee
+
+[33mcommit 762e33c75f8fd14fdc6f6a21d6d1dc134d409c6d[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Tue Apr 8 21:16:48 2025 +0100
+
+    elvis of baghdad
+
+[33mcommit cd69af9593b9c87138ab835f88147674e1a0e5ee[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Tue Apr 8 17:35:52 2025 +0100
+
+    fkcing css
+
+[33mcommit f99d0a8f30552bf40eb55826bf9e7ca009a4741b[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Tue Apr 8 17:33:54 2025 +0100
+
+    z index
+
+[33mcommit 1a7adde0405df1b46ad92088e03a051937c0f305[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Tue Apr 8 17:28:11 2025 +0100
+
+    buttons
+
+[33mcommit 4ff2d72acd1501a6718373327c4c2cda847fefb0[m
+Author: ytalhakivrak <y.t.kivrak63@gmail.com>
+Date:   Tue Apr 8 17:27:21 2025 +0100
+
+    Profile page
+
+[33mcommit dbe0baedfa2297510baef28e94bc0a3d2e88b23d[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Tue Apr 8 16:38:14 2025 +0100
+
+    navbar
+
+[33mcommit 03e98756c31ee205bf929d60e442492610878b1f[m
+Author: ytalhakivrak <y.t.kivrak63@gmail.com>
+Date:   Tue Apr 8 16:32:59 2025 +0100
+
+    comment check
+
+[33mcommit e8d742f33250b71324c07f631f2a2ba062744a30[m
+Author: ytalhakivrak <y.t.kivrak63@gmail.com>
+Date:   Tue Apr 8 16:23:33 2025 +0100
+
+    Deleted Activity Log for Wallet
+
+[33mcommit b2b3a1332d30e24999324e0d6cc6bddd2b3e2388[m
+Author: ytalhakivrak <y.t.kivrak63@gmail.com>
+Date:   Tue Apr 8 16:18:21 2025 +0100
+
+    Deleted Transaction Page and its navigations
+
+[33mcommit 70c07730d04f9e714b21f23c12dc75329f1fb08b[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Tue Apr 8 16:16:51 2025 +0100
+
+    check
+
+[33mcommit 3b084ccf6e8b3cc564bdbb4252431f987cbb1bf7[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Tue Apr 8 15:55:06 2025 +0100
+
+    ay ay ay whaddduuu
+
+[33mcommit e17ec9133357745f0fbc34b3c4ea643519abcd0a[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Tue Apr 8 15:03:40 2025 +0100
+
+    #cleancode
+
+[33mcommit 5482df9da3678ffcaa9cabc9f80ab9c1aea710dd[m
+Author: ytalhakivrak <y.t.kivrak63@gmail.com>
+Date:   Tue Apr 8 13:29:04 2025 +0100
+
+    Added a general nav bar with import Link and fixed the not found error for history
+
+[33mcommit 5228676c3f63600ad2ff17f6b629c00f0e5ae386[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Tue Apr 8 03:29:11 2025 +0100
+
+    work in progress on dashboard
+
+[33mcommit cef6e667d1cbf7cfb991e6760107e324987bcc93[m
+Merge: a6bfcd7 c5cddd7
+Author: Tuanaoz <tuanaoz05@gmail.com>
+Date:   Mon Apr 7 19:51:44 2025 +0100
+
+    Merge branch 'main' of https://github.com/mhttekin/vaultchain
+
+[33mcommit a6bfcd7eb2ba0bb4fee3f165a6b7716df08c9ef3[m
+Author: Tuanaoz <tuanaoz05@gmail.com>
+Date:   Mon Apr 7 19:50:46 2025 +0100
+
+    name change for transactions history folder
+
+[33mcommit c5cddd7a0424d8948eaafdf70b3995d9211178d8[m
+Merge: 0c0ba67 a91844b
+Author: mhttekin <94392325+mhttekin@users.noreply.github.com>
+Date:   Mon Apr 7 19:47:47 2025 +0100
+
+    Merge pull request #1 from mhttekin/show-transactions-page
+
+[33mcommit a91844b34ad3e039f74eaf52b839265494d07cbd[m[33m ([m[1;31morigin/show-transactions-page[m[33m)[m
+Merge: 2b7dc61 0c0ba67
+Author: Closture <chizara88@gmail.com>
+Date:   Mon Apr 7 19:36:44 2025 +0100
+
+    Merge branch 'main' of https://github.com/mhttekin/vaultchain
+
+[33mcommit 0c0ba67074a0c98d5db41173215afe1c43549349[m
+Author: Tuanaoz <tuanaoz05@gmail.com>
+Date:   Mon Apr 7 19:10:34 2025 +0100
+
+    transection history update
+
+[33mcommit 2b7dc61c8f38715da1ff93a20a23c215127ea667[m
+Author: Closture <ec23379@qmul.ac.uk>
+Date:   Mon Apr 7 18:38:58 2025 +0100
+
+    transactions page UI
+
+[33mcommit 9aac17bfa1d661450f12dc07eb8c67e87d17b3da[m
+Author: ytalhakivrak <y.t.kivrak63@gmail.com>
+Date:   Mon Apr 7 17:25:07 2025 +0100
+
+    Improved the admin login logic and made the dashboard contain a bit more content.
+
+[33mcommit e8210b8cce7a7f0d0904a5b22c8786fcd170f4ac[m
+Author: ytalhakivrak <y.t.kivrak63@gmail.com>
+Date:   Sat Apr 5 04:23:44 2025 +0100
+
+    Created a basic admin login with hardcoded account, and a very basic admin dashboard page
+
+[33mcommit a4dbb74e27e9191a9e963a1c358b8c79b7ec599a[m
+Author: Yaya <issa431@outlook.com>
+Date:   Thu Apr 3 01:11:50 2025 +0100
+
+    added wallet page and real time prices
+
+[33mcommit 4e53bc600a166e799cb9a55c17d44986d9f85abf[m[33m ([m[1;32mtuanaBranch[m[33m)[m
+Author: ytalhakivrak <y.t.kivrak63@gmail.com>
+Date:   Fri Mar 28 17:29:24 2025 +0000
+
+    Designed the login and the main page. improved Style
+
+[33mcommit 5dbf798fe02787f4639e0a41c1733c7897276035[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Thu Mar 20 00:37:17 2025 +0000
+
+    migrate before use // filtering system for dashboard
+
+[33mcommit c194e11412debf80682c22afdb2550c5bbf3e3c4[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Wed Mar 19 20:18:00 2025 +0000
+
+    MIGRATE BEFORE USE MIGRATE python manage.py migrate
+
+[33mcommit e9115c6a1a079c2d7d8446d318af20fa5cf6efcc[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Tue Mar 18 18:50:34 2025 +0000
+
+    register/login done make sure to create an account
+
+[33mcommit e76576ebcac08111d37918f24406828a1949c705[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Tue Mar 18 02:46:11 2025 +0000
+
+    axios setup / login/register/logout methods for frontend
+
+[33mcommit aaaf667428315b3818147058eae5d8e4b9d81240[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Mon Mar 17 17:55:00 2025 +0000
+
+    create transactions / look for recipient public key through email address
+
+[33mcommit 1ade60cfe64230f5ae14b4548363f9d6ea261969[m
+Author: Layanal3 <cb221300@qmul.ac.uk>
+Date:   Sun Mar 16 23:24:03 2025 +0000
+
+    Layan testing
+
+[33mcommit b5afa66997348f03412d3d2238c98ce307756ebd[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Sun Mar 16 22:53:12 2025 +0000
+
+    clean
+
+[33mcommit 86047acf3f9d8708cd2892c779eccb5ddcf1d4bf[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Sun Mar 16 22:01:38 2025 +0000
+
+    comma
+
+[33mcommit 2d2574fac12090814323dba3005a0c1d9ac33c3c[m
+Author: Tuanaoz <tuanaoz05@gmail.com>
+Date:   Sun Mar 16 21:32:18 2025 +0000
+
+    testcommittuana
+
+[33mcommit 5ed72904b4a6fea0abb2673a292f52450d3d206a[m
+Author: ytalhakkivrak <y.t.kivrak63@gmail.com>
+Date:   Sun Mar 16 21:29:59 2025 +0000
+
+    added a tst
+
+[33mcommit e6a1e274d2dff280594313a8c6f90d70a037b652[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Sun Mar 16 21:14:09 2025 +0000
+
+    forgot migrations
+
+[33mcommit b77b24e15555c582533edb27fbaa933456c76e07[m
+Author: mhttekin <cb221086@qmul.ac.uk>
+Date:   Sun Mar 16 21:09:47 2
