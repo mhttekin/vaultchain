@@ -25,6 +25,6 @@ urlpatterns = [
     
     # Transaction history
     path('transactions/', TransactionHistoryView.as_view(), name='transaction-history'),
-    path('transactions/create', TransactionCreateView.as_view(), name='transaction-create'),
-    path('wallet-lookup', WalletLookupView.as_view(), name='wallet-lookup'),
+    path('transactions/create/', TransactionCreateView.as_view(), name='transaction-create'),
+    path('wallet-lookup/', WalletLookupView.as_view(), name='wallet-lookup'),
 ]
