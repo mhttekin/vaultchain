@@ -54,8 +54,8 @@ export default function Receive() {
           <div className="flex flex-col gap-5">
           {wallets.map(wallet => (
             <div key={wallet.id}
-            className="w-full border-[0.5px] rounded-2xl border-gray-700 h-24 flex
-            flex-row px-4 py-1"
+            className="w-full border-[0.5px] rounded-2xl border-gray-900 h-24 flex
+            flex-row px-4 py-1 hover:bg-[#050505]"
             style={{boxShadow: '0px 0px 120px -22px oklch(54.6% 0.245 262.881)'}}>
               <div className="flex-1 h-full items-center flex">
                 <img className="w-10 h-10" src={`/assets/${wallet.chain.name}.png`}/>

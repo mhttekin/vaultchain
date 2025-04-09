@@ -174,14 +174,16 @@ const BuyPage = () => {
             {walletBalances.map(balance => (
               <button key={balance.id}
               onClick={() => handleActiveBalance(balance)}
-              className="flex w-full">
+              className="flex w-full p-2 transition-all hover:bg-[#050505] rounded-lg border border-gray-900 items-center"
+              style={{boxShadow: '0px 0px 80px -13.6px oklch(54.6% 0.245 262.881)'}}>
                 <img src={`/assets/${balance.coin.chain.name}.png`}
                 className="w-8 h-8"/>
                 <h2 className="ml-3 font-bold text-lg w-full text-start">{balance.coin.name}</h2>
                 <div className="flex flex-col w-60 justify-end text-end">
-                  <h2 className="font-[500]">{formatNumber(calculatedAmount(balance.amount, false, balance))}
+                  <h2 className="font-[500] text-sm">${formatNumber(calculatedAmount(balance.amount, false, balance))}
+                  </h2>
+                  <h2 className="text-gray-400 text-sm">{formatTokenAmount(balance.amount)}
                   {'\u00A0'}{balance.coin.symbol}</h2>
-                  <h2 className="text-gray-400">{formatTokenAmount(balance.amount)}</h2>
                 </div>
               </button>
             ))}
@@ -292,8 +294,9 @@ const BuyPage = () => {
           className="w-8 h-8"/>
           <h2 className="ml-3 font-bold text-lg w-full text-start">{activeWalletBalance.coin.name}</h2>
           <div className="flex flex-col w-32 justify-end text-end">
-            <h2 className="font-[500]">{formatTokenAmount(activeWalletBalance.amount)}
-           {'\u00A0'}{activeWalletBalance.coin.symbol}</h2>
+            <h2 className="font-[500]">{usdMode ? '$' : ''}{usdMode ? formatNumber(
+              Number(marketData[activeWalletBalance.coin.symbol].price) * activeWalletBalance.amount) : formatNumber(activeWalletBalance.amount)}
+          {!usdMode ? `${'\u00A0'}${activeWalletBalance.coin.symbol}` : ''}</h2>
             <h2 className="text-gray-400">Available</h2>
           </div>
           <h2 className="text-gray-400 ml-2">{`>`}</h2>
