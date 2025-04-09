@@ -199,7 +199,7 @@ export default function Home() {
         <div className="flex flex-col items-start mt-5 mb-2">
           <button 
           ref={filterButtonRef}
-          className="py-1 px-3 bg-[#353535] rounded-2xl text-left
+          className="py-1 px-3 bg-[#252525] rounded-2xl text-left
     hover:bg-blue-600 transition duration-300 ease-in-out"
           onClick={() => setFilterOpen(prev => !prev)}>
           {`${selectedNetworks.length > 0 ? `Networks(${selectedNetworks.length})`

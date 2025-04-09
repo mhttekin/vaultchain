@@ -1,18 +1,28 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "@/lib/axios";
 import { useAuth } from "@/context/AuthContext";
-import styles from "./transactionHistory.module.css";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useWallet } from "@/context/WalletContext";
 
 
 export default function TransactionHistory() {
   const router = useRouter();
+  const { wallets, marketData } = useWallet();
   const { user, loading : userLoading } = useAuth(); 
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const fileMap = {
+    BTC: "bitcoin",
+    ETH: "ethereum",
+    SOL: "solana",
+  };
+  const messageMap = {
+    deposit: "Deposited",
+    withdrawal: "Withdrawn",
+  };
 
   useEffect(() => {
     if (!user && !loading){
@@ -28,17 +38,8 @@ export default function TransactionHistory() {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (!token) {
-      setError("Please login to view your transactions.");
-      setLoading(false);
-      return;
-    }
-
-    axios
-      .get("http://127.0.0.1:8000/api/transactions/", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+    axiosInstance
+      .get("http://127.0.0.1:8000/api/transactions/")
       .then((response) => {
         setTransactions(response.data);
         setLoading(false);
@@ -48,41 +49,28 @@ export default function TransactionHistory() {
         setLoading(false);
       });
   }, []);
+
   if (!user) return null;
-  if (loading || userLoading) return <p className={styles.loading}>Loading...</p>;
-  if (error) return <p className={styles.error}>{error}</p>;
+  if (loading || userLoading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
-    <div className={styles.pageWrapper}>
-      <div className={styles.historyPanel}>
-        <h2 className={styles.title}>Transaction History</h2>
+    <div className="w-full h-[100vh] flex flex-col overflow-x-hidden">
+      <div className="w-full flex flex-col px-5">
+        <h2 className="font-bold text-3xl mt-15">Transactions</h2>
 
         {transactions.length === 0 ? (
-          <p className={styles.noTransactions}>No transactions found.</p>
+          <p className="flex w-full h-full justify-center self-center">No transactions found.</p>
         ) : (
-          <div className={styles.transactionList}>
+          <div className="flex flex-col justify-center gap-5 w-full mt-15">
             {transactions.map((txn) => (
-              <div className={styles.transactionCard} key={txn.id}>
-                <div>
-                  <strong>ID:</strong> {txn.id}
+              <div className="flex flex-row w-full gap-3 items-center" key={txn.id}>
+                <div className="w-7 h-7 flex items-center">
+                  <img src={`/assets/${fileMap[txn.coin_symbol]}.png`} className="w-7 h-7"/>
                 </div>
-                <div>
-                  <strong>Type:</strong> {txn.transaction_type}
-                </div>
-                <div>
-                  <strong>Amount:</strong> {txn.amount} {txn.coin_symbol}
-                </div>
-                <div>
-                  <strong>Sender:</strong> {formatAddress(txn.wallet_public_key) || "N/A"}
-                </div>
-                <div>
-                  <strong>Receiver:</strong> {formatAddress(txn.counterparty_public_key) || "N/A"}
-                </div>
-                <div>
-                  <strong>Status:</strong> {txn.status || "Completed"}
-                </div>
-                <div>
-                  <strong>Date:</strong> {new Date(txn.timestamp).toLocaleString()}
+                <div className="w-20 h-7 flex items-center">
+                  <h1 className="font-bold text-sm">{messageMap[txn.transaction_type]}</h1> 
+                  <h1></h1>
                 </div>
               </div>
             ))}
