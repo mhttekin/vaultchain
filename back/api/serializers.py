@@ -211,6 +211,13 @@ class TransactionCreateSerializer(serializers.Serializer):
             # we save this boys
             sender_balance.amount -= amount
             sender_balance.save()
+
+            if sender_wallet.id == recipient_wallet.id:
+                recipient_balance = WalletBalance.objects.get(
+                    wallet=recipient_wallet,
+                    coin=coin
+                )
+
             recipient_balance.amount += amount
             recipient_balance.save()
             # job done

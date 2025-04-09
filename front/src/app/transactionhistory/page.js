@@ -20,6 +20,12 @@ export default function TransactionHistory() {
     }
   }, [user, loading, router]);
 
+  const formatAddress = (address) => {
+    if (address && address.length > 20) {
+      return `${address.slice(0, 5)}...${address.slice(-4)}`; 
+    }
+    return address;
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
@@ -67,10 +73,10 @@ export default function TransactionHistory() {
                   <strong>Amount:</strong> {txn.amount} {txn.coin_symbol}
                 </div>
                 <div>
-                  <strong>Sender:</strong> {txn.sender || "N/A"}
+                  <strong>Sender:</strong> {formatAddress(txn.wallet_public_key) || "N/A"}
                 </div>
                 <div>
-                  <strong>Receiver:</strong> {txn.receiver || "N/A"}
+                  <strong>Receiver:</strong> {formatAddress(txn.counterparty_public_key) || "N/A"}
                 </div>
                 <div>
                   <strong>Status:</strong> {txn.status || "Completed"}
