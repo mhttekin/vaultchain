@@ -1,4 +1,3 @@
-
 /* Animated Background */
 .animated-background {
   position: fixed;
@@ -113,10 +112,70 @@
 
 /* Error Message */
 .error-message {
-  color: #ff4d4d;
-  margin-bottom: 10px;
-  font-size: 14px;
-  text-align: center;
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+/* Password Strength Indicator */
+.password-strength-indicator {
+  margin-top: 10px;
+}
+
+.password-strength {
+  font-weight: bold;
+  margin-bottom: 5px;
+  text-transform: capitalize;
+}
+
+.password-strength.weak {
+  color: red;
+}
+
+.password-strength.medium {
+  color: orange;
+}
+
+.password-strength.strong {
+  color: green;
+}
+
+.strength-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+.strength-level {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.strength-level.weak {
+  background-color: red;
+}
+
+.strength-level.medium {
+  background-color: orange;
+}
+
+.strength-level.strong {
+  background-color: green;
+}
+
+/* Password Recommendations */
+.password-recommendations {
+  margin-top: 10px;
+  padding-left: 20px;
+  color: #ff6b6b; /* Light red for recommendations */
+  font-size: 0.9rem;
+}
+
+.password-recommendations li {
+  margin-bottom: 5px;
 }
 
 /* Falling Items Container */
@@ -149,4 +208,72 @@
   height: 40px;
   animation: fall linear infinite;
   opacity: 1;
+}
+
+.password-strength-indicator {
+  margin-top: 10px;
+}
+
+.password-strength {
+  font-weight: bold;
+  margin-bottom: 5px;
+  transition: color 0.5s ease;
+}
+
+.password-strength.strong {
+  color: #28a745; /* Green */
+}
+
+.password-strength.medium {
+  color: #ffc107; /* Orange */
+}
+
+.password-strength.weak {
+  color: #dc3545; /* Red */
+}
+
+.strength-bar {
+  background: #ddd;
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+.strength-level {
+  height: 100%;
+  transition: width 0.5s ease, background-color 0.5s ease;
+}
+
+.strength-level.strong {
+  background-color: #28a745;
+}
+
+.strength-level.medium {
+  background-color: #ffc107;
+}
+
+.strength-level.weak {
+  background-color: #dc3545;
+}
+
+.error-section {
+  margin-top: 15px;
+  background-color: #222;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.error-message {
+  color: #dc3545;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.password-recommendations {
+  list-style-type: disc;
+  padding-left: 20px;
+  color: #bbb;
+  font-size: 13px;
 }

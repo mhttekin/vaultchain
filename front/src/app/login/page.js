@@ -7,7 +7,7 @@ import "./auth.css";
 export default function Auth() {
   const router = useRouter();
   const { register, login, user, loading } = useAuth();
-  const fallingContainerRef = useRef(null); // Use a ref for the falling-items container
+  const fallingContainerRef = useRef(null);
 
   useEffect(() => {
     if (user) {
@@ -26,12 +26,59 @@ export default function Auth() {
     email: "",
     password: "",
   });
+  const [passwordStrength, setPasswordStrength] = useState("");
+  const [passwordRecommendations, setPasswordRecommendations] = useState([]);
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleRegisterChange = (e) => {
+    const { name, value } = e.target;
     setRegisterForm({
       ...registerForm,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+
+    if (name === "password") {
+      const { strength } = evaluatePasswordStrength(value);
+      setPasswordStrength(strength);
+    }
+  };
+
+  const evaluatePasswordStrength = (password) => {
+    let strength = "";
+    const recommendations = [];
+
+    if (password.length < 8) {
+      recommendations.push("Password should be at least 8 characters long.");
+    }
+    if (!/[A-Z]/.test(password)) {
+      recommendations.push("Add at least one uppercase letter.");
+    }
+    if (!/[a-z]/.test(password)) {
+      recommendations.push("Add at least one lowercase letter.");
+    }
+    if (!/\d/.test(password)) {
+      recommendations.push("Add at least one number.");
+    }
+    if (!/[!@#$%^&*]/.test(password)) {
+      recommendations.push("Add at least one special character (e.g., !, @, #, $, etc.).");
+    }
+
+    if (
+      password.length >= 8 &&
+      /[A-Z]/.test(password) &&
+      /[a-z]/.test(password) &&
+      /\d/.test(password) &&
+      /[!@#$%^&*]/.test(password)
+    ) {
+      strength = "Strong";
+    } else if (recommendations.length <= 2) {
+      strength = "Medium";
+    } else {
+      strength = "Weak";
+    }
+
+    return { strength, recommendations };
   };
 
   const handleLoginChange = (e) => {
@@ -40,9 +87,6 @@ export default function Auth() {
       [e.target.name]: e.target.value,
     });
   };
-
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
@@ -61,14 +105,27 @@ export default function Auth() {
     e.preventDefault();
     setIsLoading(true);
     setError("");
+
+    const { strength, recommendations } = evaluatePasswordStrength(registerForm.password);
+
+    if (recommendations.length > 0) {
+      setError("Password does not meet the requirements:");
+      setPasswordRecommendations(recommendations);
+      setIsLoading(false);
+      return;
+    } else {
+      setPasswordRecommendations([]);
+    }
+
     const response = await register(
       registerForm.email,
       registerForm.password,
       registerForm.first_name,
       registerForm.last_name
     );
+
     if (response.success) {
-        router.push("/");
+      router.push("/");
     } else {
       setError(response.error);
     }
@@ -77,40 +134,37 @@ export default function Auth() {
 
   // Falling items logic
   useEffect(() => {
-    // Ensure the container exists
     const timeout = setTimeout(() => {
-    if (fallingContainerRef && fallingContainerRef.current){
-      const fallingContainer = fallingContainerRef.current;
-      const assets = ["/assets/bitcoin.png", "/assets/ethereum.png", "/assets/solana.png"]; // Add your PNG paths here
+      if (fallingContainerRef && fallingContainerRef.current) {
+        const fallingContainer = fallingContainerRef.current;
+        const assets = ["/assets/bitcoin.png", "/assets/ethereum.png", "/assets/solana.png"];
 
-      function createFallingItem() {
-        const item = document.createElement("img");
-        item.src = assets[Math.floor(Math.random() * assets.length)]; // Randomly select an asset
-        item.className = "falling-item";
-        item.style.left = `${Math.random() * 100}vw`; // Random horizontal position
-        item.style.animationDuration = `${Math.random() * 3 + 2}s`; // Random fall duration
-        item.style.animationDelay = `${Math.random() * 1}s`; // Random delay
-        fallingContainer.appendChild(item);
+        function createFallingItem() {
+          const item = document.createElement("img");
+          item.src = assets[Math.floor(Math.random() * assets.length)];
+          item.className = "falling-item";
+          item.style.left = `${Math.random() * 100}vw`;
+          item.style.animationDuration = `${Math.random() * 3 + 2}s`;
+          item.style.animationDelay = `${Math.random() * 1}s`;
+          fallingContainer.appendChild(item);
 
-        // Remove the item after the animation ends
-        item.addEventListener("animationend", () => {
-          item.remove();
-        });
-      }
-
-      function createFallingBatch() {
-        const batchSize = 10; // Number of coins to create in each batch
-        for (let i = 0; i < batchSize; i++) {
-          createFallingItem();
+          item.addEventListener("animationend", () => {
+            item.remove();
+          });
         }
+
+        function createFallingBatch() {
+          const batchSize = 10;
+          for (let i = 0; i < batchSize; i++) {
+            createFallingItem();
+          }
+        }
+
+        const interval = setInterval(createFallingBatch, 3000);
+
+        return () => clearInterval(interval);
       }
-
-      // Create a batch of falling items every 3 seconds
-      const interval = setInterval(createFallingBatch, 3000);
-
-      return () => clearInterval(interval); // Cleanup on component unmount
-    }
-    }, 100); // waits to fully load the dom 
+    }, 100);
     return () => clearTimeout(timeout);
   }, []);
 
@@ -193,10 +247,49 @@ export default function Auth() {
                 type="password"
                 name="password"
                 value={registerForm.password}
-                onChange={handleRegisterChange}
+                onChange={(e) => {
+                  handleRegisterChange(e);
+                  const { strength } = evaluatePasswordStrength(e.target.value);
+                  setPasswordStrength(strength);
+                }}
                 required
               />
-              {error && <p className="error-message">{error}</p>}
+
+              {/* Password Strength Indicator */}
+              <div className="password-strength-indicator">
+                <p className={`password-strength ${passwordStrength.toLowerCase()}`}>
+                  Password Strength: {passwordStrength || "N/A"}
+                </p>
+                <div className="strength-bar">
+                  <div
+                    className={`strength-level ${passwordStrength.toLowerCase()}`}
+                    style={{
+                      width:
+                        passwordStrength === "Strong"
+                          ? "100%"
+                          : passwordStrength === "Medium"
+                          ? "66%"
+                          : passwordStrength === "Weak"
+                          ? "33%"
+                          : "0%",
+                    }}
+                  ></div>
+                </div>
+              </div>
+
+              {/* Error and Recommendations */}
+              {error && (
+                <div className="error-section">
+                  <p className="error-message">{error}</p>
+                  {passwordRecommendations.length > 0 && (
+                    <ul className="password-recommendations">
+                      {passwordRecommendations.map((rec, index) => (
+                        <li key={index}>{rec}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
               <button type="submit">Register</button>
             </form>
           )}
