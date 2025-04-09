@@ -107,7 +107,7 @@ export default function Home() {
     });
   };
 
-  if (loading) {
+  if (loading || walletLoading) {
     return <div>Loading...</div>;
   }
 
