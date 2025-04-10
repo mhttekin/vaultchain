@@ -4,9 +4,6 @@ from django.db import migrations
 from decimal import Decimal
 
 def create_initial_wallet_balances(apps, schema_editor):
-    """
-    Bla bla blba bla bla bla
-    """
     User = apps.get_model('api', 'CustomUser')
     Wallet = apps.get_model('api', 'Wallet')
     Coin = apps.get_model('api', 'Coin')
