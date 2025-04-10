@@ -1,0 +1,60 @@
+/* Password Strength Indicator */
+.password-strength-indicator {
+  margin-top: 10px;
+}
+
+.password-strength {
+  font-weight: bold;
+  margin-bottom: 5px;
+  text-transform: capitalize;
+}
+
+.password-strength.weak {
+  color: red;
+}
+
+.password-strength.medium {
+  color: orange;
+}
+
+.password-strength.strong {
+  color: green;
+}
+
+.strength-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+.strength-level {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.strength-level.weak {
+  background-color: red;
+}
+
+.strength-level.medium {
+  background-color: orange;
+}
+
+.strength-level.strong {
+  background-color: green;
+}
+
+/* Password Recommendations */
+.password-recommendations {
+  margin-top: 10px;
+  padding-left: 20px;
+  color: #ff6b6b; /* Light red for recommendations */
+  font-size: 0.9rem;
+}
+
+.password-recommendations li {
+  margin-bottom: 5px;
+}

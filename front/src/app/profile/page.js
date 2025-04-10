@@ -15,18 +15,25 @@ export default function ProfilePage() {
   const [error, setError] = useState("");
   const [showImagesList, setShowImagesList] = useState(false);
 
+  const [isEditingPassword, setIsEditingPassword] = useState(false);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordStrength, setPasswordStrength] = useState("");
+  const [passwordRecommendations, setPasswordRecommendations] = useState([]);
+
   const profileImages = [
     "/profile_pictures/woman.png",
     "/profile_pictures/boy.png",
     "/profile_pictures/user1.png",
     "/profile_pictures/lion.png",
     "/profile_pictures/cat.png",
-    "/profile_pictures/parrot.png"
+    "/profile_pictures/parrot.png",
   ];
 
   useEffect(() => {
     if (!user && !loading) {
-      router.push('/login');
+      router.push("/login");
     }
   }, [user, loading, router]);
 
@@ -59,6 +66,27 @@ export default function ProfilePage() {
     }
   };
 
+  const handleSavePassword = async () => {
+    if (newPassword !== confirmPassword) {
+      setError("New passwords do not match.");
+      return;
+    }
+
+    try {
+      await axiosInstance.put("/api/user/password/", {
+        old_password: oldPassword,
+        new_password: newPassword,
+      });
+      setIsEditingPassword(false);
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setError("");
+    } catch {
+      setError("Failed to change password. Please check your old password.");
+    }
+  };
+
   const handleSelectImage = (imageUrl) => {
     setProfileImage(imageUrl);
     setShowImagesList(false);
@@ -78,6 +106,43 @@ export default function ProfilePage() {
     } catch {
       setError("Failed to save profile image.");
     }
+  };
+
+  const evaluatePasswordStrength = (password) => {
+    let strength = "";
+    const recommendations = [];
+
+    if (password.length < 8) {
+      recommendations.push("Password should be at least 8 characters long.");
+    }
+    if (!/[A-Z]/.test(password)) {
+      recommendations.push("Add at least one uppercase letter.");
+    }
+    if (!/[a-z]/.test(password)) {
+      recommendations.push("Add at least one lowercase letter.");
+    }
+    if (!/\d/.test(password)) {
+      recommendations.push("Add at least one number.");
+    }
+    if (!/[!@#$%^&*]/.test(password)) {
+      recommendations.push("Add at least one special character (e.g., !, @, #, $, etc.).");
+    }
+
+    if (
+      password.length >= 8 &&
+      /[A-Z]/.test(password) &&
+      /[a-z]/.test(password) &&
+      /\d/.test(password) &&
+      /[!@#$%^&*]/.test(password)
+    ) {
+      strength = "Strong";
+    } else if (recommendations.length <= 2) {
+      strength = "Medium";
+    } else {
+      strength = "Weak";
+    }
+
+    return { strength, recommendations };
   };
 
   if (!user) return null;
@@ -160,6 +225,104 @@ export default function ProfilePage() {
           </div>
         ) : (
           <p className="mt-2 text-lg font-semibold">{user.first_name} {user.last_name}</p>
+        )}
+      </div>
+
+      <div className="mt-10 bg-neutral-900 p-6 rounded-lg">
+        <div className="flex justify-between items-center">
+          <p className="text-blue-500">Change Password</p>
+          {!isEditingPassword && (
+            <button onClick={() => setIsEditingPassword(true)} className="text-neutral-400 hover:text-blue-500">
+              ✏️
+            </button>
+          )}
+        </div>
+
+        {isEditingPassword ? (
+          <div className="mt-4 flex flex-col gap-3">
+            <input
+              type="password"
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+              className="bg-black border border-neutral-700 text-white px-4 py-2 rounded"
+              placeholder="Old password"
+            />
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(e) => {
+                setNewPassword(e.target.value);
+                const { strength, recommendations } = evaluatePasswordStrength(e.target.value);
+                setPasswordStrength(strength);
+                setPasswordRecommendations(recommendations);
+              }}
+              className="bg-black border border-neutral-700 text-white px-4 py-2 rounded"
+              placeholder="New password"
+            />
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="bg-black border border-neutral-700 text-white px-4 py-2 rounded"
+              placeholder="Confirm new password"
+            />
+
+            {/* Password Strength Indicator */}
+            <div className="password-strength-indicator">
+              <p className={`password-strength ${passwordStrength.toLowerCase()}`}>
+                Password Strength: {passwordStrength || "N/A"}
+              </p>
+              <div className="strength-bar">
+                <div
+                  className={`strength-level ${passwordStrength.toLowerCase()}`}
+                  style={{
+                    width:
+                      passwordStrength === "Strong"
+                        ? "100%"
+                        : passwordStrength === "Medium"
+                        ? "66%"
+                        : passwordStrength === "Weak"
+                        ? "33%"
+                        : "0%",
+                  }}
+                ></div>
+              </div>
+            </div>
+
+            {/* Recommendations */}
+            {passwordRecommendations.length > 0 && (
+              <ul className="password-recommendations text-sm text-red-400 mt-2">
+                {passwordRecommendations.map((rec, index) => (
+                  <li key={index}>{rec}</li>
+                ))}
+              </ul>
+            )}
+
+            <div className="flex gap-3">
+              <button
+                onClick={handleSavePassword}
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              >
+                Save
+              </button>
+              <button
+                onClick={() => {
+                  setIsEditingPassword(false);
+                  setOldPassword("");
+                  setNewPassword("");
+                  setConfirmPassword("");
+                  setPasswordStrength("");
+                  setPasswordRecommendations([]);
+                  setError("");
+                }}
+                className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <p className="mt-2 text-lg font-semibold">********</p>
         )}
       </div>
 
