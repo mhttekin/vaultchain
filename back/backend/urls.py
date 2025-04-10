@@ -26,9 +26,6 @@ from rest_framework_simplejwt.views import (
 
 """
 right under admin is our whole login.
-In two lines of code.
-Whole login.
-
 """
 urlpatterns = [
     path('admin/', admin.site.urls),
