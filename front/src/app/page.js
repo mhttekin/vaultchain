@@ -136,24 +136,24 @@ useEffect(() => {
         </div>
       )}
       <div className="flex flex-row justify-between items-start mt-14 mx-[1.75rem]">
-      <div className="w-auto flex flex-col justify-start text-gray-200 font-bold relative">
-  <span className="text-blue-500 font-semibold text-3xl">Welcome</span>
-
-  <div className="absolute left-0 top-8 w-6 h-6 rounded-full overflow-hidden border border-gray-400">
-    {profileImage ? (
-      <img
-        src={profileImage}
-        alt="Profile"
-        className="w-full h-full object-cover"
-      />
-    ) : (
-      <div className="flex items-center justify-center w-full h-full text-[8px] text-gray-400 bg-neutral-800">
-        No Img
-      </div>
-    )}
-  </div>
-
-  <span className="text-xl text-white pl-8">{user.first_name} {user.last_name}</span>
+        <div className="w-auto flex flex-col justify-start text-gray-200 font-bold relative">
+          <span className="text-blue-500 font-semibold text-xl">Welcome</span>
+            <div className="flex w-full items-center">
+              <div className="w-6 h-6 rounded-full overflow-hidden border border-gray-400">
+              {profileImage ? (
+              <img
+              src={profileImage}
+              alt="Profile"
+              className="w-full h-full object-cover"
+              />
+              ) : (
+              <div className="flex items-center justify-center w-full h-full text-[8px] text-gray-400 bg-neutral-800">
+                No Img
+              </div>
+              )}
+            </div>
+            <span className="text-2xl text-white pl-3">{user.first_name} {user.last_name}</span>
+          </div>
 </div>
         <div className="relative">
         <button
