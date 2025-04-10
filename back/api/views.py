@@ -11,6 +11,9 @@ from rest_framework.exceptions import NotFound, ValidationError
 from .serializers import UserCreateSerializer, WalletSerializer, WalletBalanceSerializer, WalletBalanceUpdateSerializer, UserUpdateSerializer, PasswordUpdateSerializer, UserSerializer, CoinSerializer, ChainSerializer, TransactionViewSerializer, TransactionCreateSerializer
 from .services import create_user_wallets, create_self_transaction_log
 from .models import Wallet, WalletBalance, Coin, Chain, Transaction
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from .models import Profile
 """
 This is the place where we take Web Requests like GET, POST and turn them into Web responses.
 Ex: Front-end asks for user wallets, this is the place where we create the right functions to
@@ -237,5 +240,32 @@ class WalletLookupView(generics.GenericAPIView):
                 })
             except Wallet.DoesNotExist:
                 return Response({"error":"No wallet with this public key"}, status=status.HTTP_404_NOT_FOUND)
-        
 
+@api_view(['GET', 'POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def profile_image(request):
+    user = request.user
+
+    if request.method == "GET":
+        profile, created = Profile.objects.get_or_create(user=user)
+        return Response({"profile_image": profile.profile_image})
+
+    elif request.method == "POST":
+        image_url = request.data.get("imageUrl", "")
+        profile, created = Profile.objects.get_or_create(user=user)
+        profile.profile_image = image_url
+        profile.save()
+        return Response({"success": True, "profile_image": profile.profile_image})
+
+
+@api_view(['PATCH'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def update_profile_image(request):
+    user = request.user
+    image_url = request.data.get("imageUrl", "")
+    profile, created = Profile.objects.get_or_create(user=user)
+    profile.profile_image = image_url
+    profile.save()
+    return Response({"success": True, "profile_image": profile.profile_image})

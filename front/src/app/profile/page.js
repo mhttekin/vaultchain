@@ -96,7 +96,7 @@ export default function ProfilePage() {
     if (!profileImage) return;
     try {
       const response = await axiosInstance.patch("/api/user/update-profile-image/", {
-        profile_image: profileImage,
+        imageUrl: profileImage,
       });
       setUser((prevUser) => ({
         ...prevUser,

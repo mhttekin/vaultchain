@@ -2,8 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import BaseUserManager
-
-# this is boring
+from django.conf import settings
 
 class CustomUserManager(BaseUserManager):
     """
@@ -123,3 +122,10 @@ class Transaction(models.Model):
     recipient_new_balance = models.DecimalField(max_digits=20, decimal_places=8, null=True, blank=True)
 
     timestamp = models.DateTimeField(auto_now_add=True)
+
+class Profile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    profile_image = models.URLField(default='', blank=True)
+
+    def __str__(self):
+        return self.user.username

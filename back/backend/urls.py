@@ -17,7 +17,7 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
-from .views import profile_view, update_profile_image
+from api.views import profile_image, update_profile_image
 from django.contrib import admin
 from rest_framework_simplejwt.views import (
         TokenObtainPairView,
@@ -35,7 +35,7 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/', include('api.urls')),
-    path('profile/', profile_view, name='profile'),
+    path("api/user/profile-image/", profile_image, name="profile_image"),
     path("api/user/update-profile-image/", update_profile_image),
 ]
 
