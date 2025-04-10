@@ -32,9 +32,9 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractUser):
     # we not gonna login with username, email instead
-    username = None 
+    username = None
     email = models.EmailField('email address', unique=True)
-    # user types les gooooo
+    # user types
     USER_TYPE_CHOICES = (
             ('standard', 'Standard User'),
             ('advanced', 'Advanced User'),
@@ -52,7 +52,6 @@ class CustomUser(AbstractUser):
         return self.email
 
 class Chain(models.Model):
-    # Maybe we can add id for this but not sure
     name = models.CharField(max_length=50, unique=True)
     symbol = models.CharField(max_length=10, unique=True)
     
@@ -73,10 +72,6 @@ class Coin(models.Model):
         return f"{self.name} : {self.symbol}"
     
 class Wallet(models.Model):
-    """
-    Wallet depends on the existence of user, so CASCADE kills it if we remove user from database,
-    But we will use user.is_active = false instead so we won't fuck the db. 
-    """
 
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="wallets")
     chain = models.ForeignKey(Chain, on_delete=models.CASCADE, related_name="wallets")
@@ -101,7 +96,7 @@ class WalletBalance(models.Model):
 
 class Transaction(models.Model):
     """
-    Transaction can be deposit, withdrawal, or transfer, the transferhistory should be both ways for 
+    Transaction can be deposit, withdrawal, or transfer, the transfer history should be both ways for
     the recipient as well.
     """
     TRANSACTION_TYPES = (

@@ -10,30 +10,28 @@ It also converts any JSON or data gathered from the frontend to Python objects. 
 
 User = get_user_model()
 
-# for general user display only 
+# for general user display only
 class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'user_type', 'first_name', 'last_name'] # we get these fields of the user, might add something later if needed. 
-        read_only_fields = ['id','email','user_type', 'first_name', 'last_name'] # they will not change 
+        fields = ['id', 'email', 'user_type', 'first_name', 'last_name'] # we get these fields of the user, might add something later if needed.
+        read_only_fields = ['id','email','user_type', 'first_name', 'last_name'] # they will not change
 
-# for getting the user data from the register form 
+# for getting the user data from the register form
 class UserCreateSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True) # only to be written not accessed. 
+    password = serializers.CharField(write_only=True) # only to be written not accessed.
     class Meta:
         model = User
         fields = ['email', 'password', 'first_name', 'last_name', 'user_type']
 
     def create(self, validated_data):
-        password = validated_data.pop('password') # we take this bisssshh
+        password = validated_data.pop('password')
         user = User(**validated_data)
         user.set_password(password)
         user.save()
         return user
 
-# i guess renaming since users can only change these fields
-# not sure of user_type, might be better with admin permission 
 class UserUpdateSerializer(serializers.ModelSerializer):
     
     class Meta:
@@ -46,14 +44,14 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-# this uses normal serializer since we don't need the whole fields of the model 
+# this uses normal serializer since we don't need the whole fields of the model
 class PasswordUpdateSerializer(serializers.Serializer):
 
     old_password = serializers.CharField(write_only=True, required=True)
     new_password = serializers.CharField(write_only=True, required=True)
 
     def validate_old_password(self, value):
-        user = self.context['request'].user # don't know what this, i guess it gets the user object requested for this. 
+        user = self.context['request'].user 
         if not user.check_password(value):
             raise serializers.ValidationError("Current (old) password is incorrect")
         return value
@@ -86,7 +84,7 @@ class WalletSerializer(serializers.ModelSerializer):
     chain = ChainSerializer(read_only=True)
     class Meta:
         model = Wallet
-        fields = ['id', 'chain', 'public_key', 'created_at'] # we not adding private key 
+        fields = ['id', 'chain', 'public_key', 'created_at'] # we not adding private key
         read_only_fields = ['id', 'public_key', 'created_at']
 
 # Gets the walletbalance, no updating
@@ -134,7 +132,7 @@ class TransactionViewSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         user = self.context['request'].user 
-        # we exclude the other parties balances since it would be weird
+        # we exclude the other parties balances
         if instance.wallet.user == user:
             representation.pop('recipient_previous_balance', None)
             representation.pop('recipient_new_balance', None)
@@ -151,7 +149,7 @@ class TransactionCreateSerializer(serializers.Serializer):
     amount = serializers.DecimalField(max_digits=20, decimal_places=8, min_value=0.00000001)
 
     def validate(self, data):
-        # check if sender wallet exists 
+        # check if sender wallet exists
         try:
             sender_wallet = Wallet.objects.get(
                 public_key=data['sender_public_key'],
@@ -159,12 +157,12 @@ class TransactionCreateSerializer(serializers.Serializer):
             )
         except Wallet.DoesNotExist:
             raise serializers.ValidationError('Wallet not found')
-        # check if the recipient wallet exists 
+        # check if the recipient wallet exists
         try:
             recipient_wallet = Wallet.objects.get(public_key=data['recipient_public_key'])
         except Wallet.DoesNotExist:
             raise serializers.ValidationError('Recipient wallet does not exist')
-        # check if the wallet chain's are the same 
+        # check if the wallet chain's are the same
         if sender_wallet.chain != recipient_wallet.chain:
             raise serializers.ValidationError("Wallet chain's do not match")
         # check if coin exists
@@ -172,7 +170,7 @@ class TransactionCreateSerializer(serializers.Serializer):
             coin = Coin.objects.get(id=data['coin_id'])
         except Coin.DoesNotExist:
             raise serializers.ValidationError('Coin does not exist')
-        # check if sender has balance 
+        # check if sender has balance
         try:
             sender_balance = WalletBalance.objects.get(
                     wallet=sender_wallet,
@@ -197,7 +195,7 @@ class TransactionCreateSerializer(serializers.Serializer):
         sender_balance = validated_data['sender_balance']
         amount = validated_data['amount']
 
-        # now we either get or create the walletbalance 
+        # now we either get or create the walletbalance
         recipient_balance, created = WalletBalance.objects.get_or_create(
             wallet=recipient_wallet,
             coin=coin,
@@ -208,7 +206,6 @@ class TransactionCreateSerializer(serializers.Serializer):
         recipient_previous = recipient_balance.amount
 
         with transaction.atomic():
-            # we save this boys
             sender_balance.amount -= amount
             sender_balance.save()
 
@@ -220,7 +217,6 @@ class TransactionCreateSerializer(serializers.Serializer):
 
             recipient_balance.amount += amount
             recipient_balance.save()
-            # job done
             tobj = Transaction.objects.create(
                     wallet=sender_wallet,
                     counterparty_wallet=recipient_wallet,

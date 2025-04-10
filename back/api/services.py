@@ -3,7 +3,7 @@ from django.db import transaction
 from .models import Chain, Wallet, WalletBalance, Coin, Transaction 
 
 """
-Some logic for api calls and creating stuff
+Some logic for api calls and creating
 """
 
 def create_user_wallets(user):
@@ -16,9 +16,8 @@ def create_user_wallets(user):
     chains = Chain.objects.filter(symbol__in=["BTC", "ETH", "SOL"])
     wallets = []
 
-    with transaction.atomic(): # i dont know what this line is // i learned it >> either create all of them or add none of them. 
+    with transaction.atomic(): #either create all of them or add none of them.
         for chain in chains:
-            # Now normally we would have had some real cryptographic stuff, but this is all mimicing
             public_key = f"{chain.symbol.lower()}_{secrets.token_hex(16)}"
             private_key = f"{chain.symbol.lower()}_{secrets.token_hex(32)}"
 
@@ -26,7 +25,7 @@ def create_user_wallets(user):
                 user=user,
                 chain=chain,
                 public_key=public_key,
-                private_key=private_key # now this is fucked up 
+                private_key=private_key
             )
             try:
                 native_coin = Coin.objects.get(symbol=chain.symbol)

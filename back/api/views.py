@@ -22,7 +22,7 @@ let that happen. JWT Auth is required for most of the stuff.
 
 User = get_user_model()
 
-# generics class hopefully does all the magic
+# generics class
 # This only supports POST by default
 class RegisterView(generics.CreateAPIView):
     serializer_class = UserCreateSerializer
@@ -36,12 +36,12 @@ class RegisterView(generics.CreateAPIView):
 class WalletListView(generics.ListAPIView):
     serializer_class = WalletSerializer 
     permission_classes = [IsAuthenticated]
-    http_method_names = ['get'] # Only GET 
+    http_method_names = ['get'] # Only GET
 
     def get_queryset(self):
         return Wallet.objects.filter(user=self.request.user)
 
-# This lists the wallet balances for the user 
+# This lists the wallet balances for the user
 class WalletBalanceView(generics.ListAPIView):
     serializer_class = WalletBalanceSerializer
     permission_classes = [IsAuthenticated]
@@ -56,14 +56,14 @@ class WalletBalanceView(generics.ListAPIView):
                 wallet__user=self.request.user
             )
         else:
-            # if no parameter bring them all >> 
+            # if no parameter bring them all >>
             return WalletBalance.objects.filter(wallet__user=self.request.user)
 
-# For the Deposit or Withdraw probably i don't know
+# For the Deposit or Withdraw
 class WalletBalanceUpdateView(generics.UpdateAPIView):
     serializer_class = WalletBalanceUpdateSerializer
     permission_classes = [IsAuthenticated]
-    http_method_names = ['patch'] # Only Patch (Patch is when part of the fields change) 
+    http_method_names = ['patch'] # Only Patch (Patch is when part of the fields change)
 
     def get_object(self):
         wallet_id = self.kwargs.get('wallet_id')
@@ -76,7 +76,7 @@ class WalletBalanceUpdateView(generics.UpdateAPIView):
         )
     def perform_update(self, serializer):
         """
-        we will call a method which logs the deposit/withdrawal after this. later. 
+        we will call a method which logs the deposit/withdrawal after this. 
         """
         old_amount = serializer.instance.amount 
         wallet_balance = serializer.save()
@@ -94,9 +94,7 @@ class WalletBalanceUpdateView(generics.UpdateAPIView):
                 t_type=t_type
         )
         
-
-    
-# either name or surname update; nothing else
+#name or surname update
 class UserFieldsUpdateView(generics.UpdateAPIView):
     serializer_class = UserUpdateSerializer
     permission_classes = [IsAuthenticated]
@@ -108,7 +106,6 @@ class UserFieldsUpdateView(generics.UpdateAPIView):
     def perform_update(self, serializer):
         serializer.save()
 
-# hard to tell 
 class PasswordUpdateView(generics.UpdateAPIView):
     serializer_class = PasswordUpdateSerializer
     permission_classes = [IsAuthenticated]
@@ -128,7 +125,7 @@ class UserFieldsInfoView(generics.RetrieveAPIView):
     def get_object(self):
         return self.request.user
 
-# some search engine shit  
+# Search engine
 class CoinListView(generics.ListAPIView):
     serializer_class = CoinSerializer
     permission_classes = [IsAuthenticated]
@@ -154,7 +151,7 @@ class ChainListView(generics.ListAPIView):
 
     def get_queryset(self):
         chain_id = self.kwargs.get('chain_id')
-        if chain_id: # not sure if we will ever use this but better implemented now
+        if chain_id:
             return Chain.objects.filter(id=chain_id) 
         else:
             return Chain.objects.all()
@@ -175,7 +172,7 @@ class TransactionHistoryView(generics.ListAPIView):
                                           | Q(counterparty_wallet__user = self.request.user)).order_by('-timestamp') # we ordering 
 
 class TransactionCreateView(generics.CreateAPIView):
-    # this creates the transaction 
+    # this creates the transaction
     serializer_class = TransactionCreateSerializer
     permission_classes = [IsAuthenticated]
     http_method_names = ['post']
@@ -222,7 +219,7 @@ class WalletLookupView(generics.GenericAPIView):
             except (User.DoesNotExist, Wallet.DoesNotExist):
                 return Response({"error":"No wallet on this email address."}, status=status.HTTP_404_NOT_FOUND)
         else:
-            if not is_email and not re.match(r'^[a-z0-9_]{17,63}$', search_term): # the regex for public key lmao
+            if not is_email and not re.match(r'^[a-z0-9_]{17,63}$', search_term):
                 return Response({"error":"Invalid wallet address format"}, status=status.HTTP_400_BAD_REQUEST)
             try:
                 wallet = Wallet.objects.get(public_key=search_term, chain__id=chain_id)
