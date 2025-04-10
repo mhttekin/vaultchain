@@ -31,7 +31,22 @@ export default function Home() {
   const settingsBarRef = useRef(null);
   const filterButtonRef = useRef(null); 
   const filterDropdownRef = useRef(null);
+  const [profileImage, setProfileImage] = useState(null);
 
+useEffect(() => {
+  const fetchProfileImage = async () => {
+    try {
+      const response = await axiosInstance.get("/api/user/profile-image/");
+      setProfileImage(response.data.profile_image);
+    } catch (error) {
+      console.error("Failed to fetch profile image", error);
+    }
+  };
+
+  if (user) {
+    fetchProfileImage();
+  }
+}, [user]);
 
   useEffect(() => {
     if (!user && !loading) {
@@ -115,25 +130,38 @@ export default function Home() {
   }
 
   return (
-  <div className="w-full h-full overflow-hidden">
     <div className="h-[100vh]  relative flex flex-col">
       {filterOpen && (
         <div className="absolute w-full h-full z-1 bg-black/30">
         </div>
       )}
       <div className="flex flex-row justify-between items-start mt-14 mx-[1.75rem]">
-        <div className="w-auto flex flex-col justify-start text-gray-200 font-bold">
-          <span
-          className="text-blue-500 font-semibold text-xl">Welcome</span>
-          <span className="text-3xl text-white">{user.first_name} {user.last_name}</span>
-        </div>
+      <div className="w-auto flex flex-col justify-start text-gray-200 font-bold relative">
+  <span className="text-blue-500 font-semibold text-3xl">Welcome</span>
+
+  <div className="absolute left-0 top-8 w-6 h-6 rounded-full overflow-hidden border border-gray-400">
+    {profileImage ? (
+      <img
+        src={profileImage}
+        alt="Profile"
+        className="w-full h-full object-cover"
+      />
+    ) : (
+      <div className="flex items-center justify-center w-full h-full text-[8px] text-gray-400 bg-neutral-800">
+        No Img
+      </div>
+    )}
+  </div>
+
+  <span className="text-xl text-white pl-8">{user.first_name} {user.last_name}</span>
+</div>
         <div className="relative">
         <button
         ref={settingsRef}
         className="cursor-pointer rounded-lg pt-2 pr-4"
 
         onClick={() => setSettingsOpen(prev => !prev)}>
-          <Settings className="w-6 h-6"/> 
+          <Settings className="w-6 h-6"/>
         </button>
         {settingsOpen && (
           <div
@@ -199,7 +227,7 @@ export default function Home() {
         <div className="flex flex-col items-start mt-5 mb-2">
           <button 
           ref={filterButtonRef}
-          className="py-1 px-3 bg-[#252525] rounded-2xl text-left
+          className="py-1 px-3 bg-[#353535] rounded-2xl text-left
     hover:bg-blue-600 transition duration-300 ease-in-out"
           onClick={() => setFilterOpen(prev => !prev)}>
           {`${selectedNetworks.length > 0 ? `Networks(${selectedNetworks.length})`
@@ -277,6 +305,5 @@ export default function Home() {
         </div>
       </div>
     </div>
-  </div>
 );
 }

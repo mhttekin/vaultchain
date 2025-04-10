@@ -85,7 +85,6 @@ SIMPLE_JWT = {
 
 STATIC_URL = '/static/'
 
-# auth done through custom user
 AUTH_USER_MODEL = 'api.CustomUser'
 
 MEDIA_URL = '/media/'
