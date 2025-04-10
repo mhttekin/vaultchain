@@ -22,10 +22,11 @@ export default function CoinInfo() {
   const {walletLoading, marketData, fetchHistoricalData, walletBalances} = useWallet();
   const [priceData, setPriceData] = useState([]);
   const [firstValue, setFirstValue] = useState(null);
-  const [infoLoading, setInfoLoading] = useState(true);
+  const [infoLoading, setInfoLoading] = useState(false);
   const [dayMode, setDayMode] = useState("1d");
   const [hoveredPrice, setHoveredPrice] = useState(null);
   const [theBalance, setTheBalance] = useState(null);
+  const [showGraph, setShowGraph] = useState(false);
 
   const nameMap = {
     bitcoin: "Bitcoin",
@@ -78,7 +79,7 @@ export default function CoinInfo() {
   };
 
 useEffect(() => {
-  if (!infoLoading){
+  if (!infoLoading && dayMode && id){
     const load = async () => {
       setInfoLoading(true); 
       const result = await fetchHistoricalData(id, dayMode);
@@ -86,18 +87,13 @@ useEffect(() => {
         setPriceData(result.data);
         console.log(result.data);
         setFirstValue(result.data[0]);
-        if (result.fromCache) {
-          setInfoLoading(false);
-        } else {
-          setTimeout(() => setInfoLoading(false), 300);
-        }
-      } else {
-        setInfoLoading(false);
+        setTimeout(() => setShowGraph(true), 1000);
       }
+      setInfoLoading(false);
     };
     load();
   }
-}, [id, dayMode, fetchHistoricalData, infoLoading]);
+}, [id, dayMode]);
 
 
 
@@ -137,6 +133,11 @@ useEffect(() => {
               }%)</h1>)}
         </div>
       </div>
+      {!showGraph ? (
+        <div className="w-full min-h-52">
+          
+        </div>
+      ) : (
       <div className="w-full min-h-52 flex justify-center items-center py-6 outline-none focus:outline-none select-none"
         style={{
           outline: "none", userSelect: "none", 
@@ -185,6 +186,7 @@ useEffect(() => {
             </LineChart>
           </ResponsiveContainer>
         </div>
+        )}
         {timeModes && (
           <div className="w-full min-h-20 -mt-5 flex justify-between">
             {timeModes.map(mode => (

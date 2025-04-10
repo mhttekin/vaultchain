@@ -27,6 +27,7 @@ export const WalletProvider = ({ children }) => {
   const fetchHistoricalData = useCallback(async (coinId, dayMode = "1d") => {
     const cacheKey = `${coinId}-${dayMode}`;
     if (historicalData[cacheKey]) {
+      console.log('YIPPI');
       return { data: historicalData[cacheKey], fromCache: true };
     }
     try {
