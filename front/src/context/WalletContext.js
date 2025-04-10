@@ -150,8 +150,7 @@ export const WalletProvider = ({ children }) => {
 
       const interval = setInterval(() => {
         fetchMarketData();
-      }, 600000); // every 10 mins, more usage can lead to pricing options kaboom
-      
+      }, 600000); // every 10 mins, more usage can lead to pricing options
       return () => clearInterval(interval);
     }
   }, [user, loading]);

@@ -1,8 +1,6 @@
 "use client"
 import React, { useEffect, useContext, createContext, useState } from "react";
 import axiosInstance from "../lib/axios";
-
-// i had this in one of my old projects, don't know the full functionality behind it, changed it for ours.
 export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {

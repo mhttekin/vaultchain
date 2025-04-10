@@ -8,7 +8,6 @@ const axiosInstance = axios.create({
     'Content-Type': 'application/json',
   },
 });
-// following a guide don't ask me anything
 axiosInstance.interceptors.request.use(request => {
   const accessToken = localStorage.getItem('access_token');
   if (accessToken) {
@@ -19,7 +18,6 @@ axiosInstance.interceptors.request.use(request => {
   return Promise.reject(error);
 });
 
-// i'm lost as much as you are
 axiosInstance.interceptors.request.use(
   response => response,
   async error => {
