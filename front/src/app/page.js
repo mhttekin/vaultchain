@@ -267,7 +267,9 @@ useEffect(() => {
               <div className="flex flex-col gap-4 w-full">
                 {getFilteredBalances().length > 0 ? (
                   getFilteredBalances().map((balance) => (
-                    <div key={balance.id} className="flex flex-row w-full gap-2
+                    <div key={balance.id} 
+                    onMouseDown={() => router.push(`/coin/${balance.coin.name.toLowerCase()}`)}
+                    className="flex flex-row w-full gap-2
                     items-center bg-[rgba(25,25,25,0.3)] rounded-lg py-3 px-2 
                     hover:bg-[rgba(30,30,30,0.4)] transition-all
                     duration-300"

@@ -113,7 +113,10 @@ const SendPage = () => {
     if (marketData && activeWalletBalance) {
       const sym = activeWalletBalance.coin.symbol?.toUpperCase();
       const price = Number(marketData[sym]?.price || 0); 
-      if (usdMode) setInputValue(String(Number(activeWalletBalance.amount) * price))
+      if (usdMode){
+        const result = price * Number(activeWalletBalance.amount);
+        setInputValue(result.toFixed(2));
+      }
       else setInputValue(activeWalletBalance.amount);
     }
   };
@@ -164,7 +167,7 @@ const SendPage = () => {
       if (usdMode) sendAmount /= marketData[activeWalletBalance.coin.chain.symbol].price;
       const safeAmount = sendAmount.toFixed(8);
       try {
-        const response = await axiosInstance.post('/api/transactions/create/',{
+        await axiosInstance.post('/api/transactions/create/',{
           "sender_public_key": activeWalletBalance.wallet.public_key,
           "recipient_public_key": sendAddress,
           "coin_id": activeWalletBalance.coin.id,
@@ -336,7 +339,7 @@ const SendPage = () => {
       <div className="flex flex-row w-full flex-1 items-end pt-10">
         <div className={`flex flex-row w-full h-32 items-center
           ${inputValue.length > 8 ? 'text-3xl' : inputValue.length > 4 ? 'text-4xl'
-            : 'text-6xl'}`}>
+            : 'text-5xl'}`}>
           <span className="font-semibold">
             {inputValue ? formatNumber(inputValue, false) : "0.00"}
           </span>
@@ -395,7 +398,7 @@ const SendPage = () => {
           ))}
         </div>
       </div>
-      <div className="flex flex-row flex-1 w-full items-start justify-center gap-2 font-bold">
+      <div className="flex mt-5 flex-row flex-1 w-full items-start justify-center gap-2 font-bold">
         <button onClick={() => router.push('/receive')}className="w-full flex justify-center p-3 rounded-3xl bg-blue-600 hover:text-xl transition-all duration-300"
         style={{boxShadow: '0px 10px 120px -3px oklch(62.3% 0.214 259.815)'}}>
           <span>Receive</span></button> 

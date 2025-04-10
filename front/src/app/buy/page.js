@@ -266,7 +266,7 @@ const BuyPage = () => {
       <div className="flex flex-row w-full flex-1 items-end pt-10">
         <div className={`flex flex-row w-full h-32 items-center
           ${inputValue.length > 8 ? 'text-3xl' : inputValue.length > 4 ? 'text-4xl'
-            : 'text-6xl'}`}>
+            : 'text-5xl'}`}>
           <span className="font-semibold">
             {inputValue ? formatNumber(inputValue, false) : "0.00"}
           </span>
@@ -316,7 +316,7 @@ const BuyPage = () => {
           ))}
         </div>
       </div>
-      <div className="flex flex-row flex-1 w-full items-start justify-center gap-2 font-bold">
+      <div className="flex mt-5 flex-row flex-1 w-full items-start justify-center gap-2 font-bold">
         <button 
         onClick={() => {
           setIsDeposit(false);

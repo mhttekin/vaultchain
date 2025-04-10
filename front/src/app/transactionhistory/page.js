@@ -8,7 +8,7 @@ import { useWallet } from "@/context/WalletContext";
 
 export default function TransactionHistory() {
   const router = useRouter();
-  const { wallets, marketData } = useWallet();
+  const { wallets, marketData, walletLoading } = useWallet();
   const { user, loading : userLoading } = useAuth(); 
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -63,7 +63,7 @@ export default function TransactionHistory() {
   }, []);
 
   if (!user) return null;
-  if (loading || userLoading) return <p>Loading...</p>;
+  if (loading || userLoading || walletLoading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
   return (
